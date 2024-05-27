@@ -1,0 +1,149 @@
+* My Personal Emacs Config                                              :TOC:
+  - [[#introduction][Introduction]]
+  - [[#links-to-resources][Links To Resources]]
+  - [[#random-notes][Random Notes]]
+  - [[#wakib-table-of-shortcuts][Wakib Table Of Shortcuts]]
+
+** Introduction
+
+To make understanding emacs easier, I am not using distributions
+anymore, but I will leave my minor notes on doom on my other GitHub
+page. The problem like many others have written about is if something
+goes wrong or if you want to customize something, the more complex the
+configuration you are working on the harder it is to get to the bottom
+of what is going on. Doom emacs is my favorite distribution with
+spacemacs coming in as a close second. They both are really excellent
+and they are a great tool for many people. I still recommend them if
+you want a distribution.
+
+To create this customized configuration I am using existing items
+noted below. This is just me taking other people's work and blending
+them together with small tweaks to fit my needs and preferences.
+
+** Links To Resources
+
+- [[https://github.com/snosov1/dot-emacs][Dot-Emacs - Snosov1]]
+- [[https://github.com/susam/emfy][Emacs for You (Emfy)]]
+- [[https://github.com/james-stoup/emacs-org-mode-tutorial][Emacs-Org-Mode-Tutorial]]
+- [[https://github.com/james-stoup/org-mode-better-defaults/tree/main][Org-Mode-Better-Defaults]]
+- [[https://github.com/darkstego/wakib-emacs][Wakib: Emacs for the rest of us]]
+- [[https://github.com/darkstego/wakib-project][Wakib Keybindings Project]]
+- [[https://github.com/darkstego/wakib-keys][Wakib Keys]]
+
+** Random Notes
+
+- C-d + - to increment number - also works with multiple cursors (multiple cursors also has a built in function that does this)
+- C-e C-b - ibuffer
+- C-e M-4 - turn on flyspell for buffer or selection
+- in dired use E to luanch in explorer / dolphin
+- press pause key to reindent file using emacs smarts
+- ("M-0"       . treemacs-select-window)
+- ("C-x t t"   . treemacs)
+- ("C-x t C-t" . treemacs-find-file)
+- ("C-x t M-t" . treemacs-find-tag)
+- (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
+- (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+- ;; In an emacs lisp scratch buffer you can run this code to double
+- ;; check value of variable:
+- ;; (message "Current fill-column value: %d" fill-column)
+- ;; M-x display-fill-column-indicator-mode
+- ;; to show vertical line at the fill-column
+- ;; highlight text and press ALT-q to fill text to that width
+- [[https://github.com/darkstego/wakib-emacs?tab=readme-ov-file#bindings][Wakib Emacs jump to key bindings section of read me]]
+  - (define-key isearch-mode-map (kbd "C-f") 'isearch-repeat-forward)
+  - (define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
+  - (define-key isearch-mode-map (kbd "M-;") 'isearch-repeat-forward)
+  - (define-key isearch-mode-map (kbd "M-:") 'isearch-repeat-backward)
+  - (define-key isearch-mode-map (kbd "C-v") 'isearch-yank-kill)
+  - (define-key isearch-mode-map (kbd "M-d") 'isearch-delete-char)
+  - (("C-S-z" . undo-tree-redo))
+  - (("C-x g" . magit-status ))
+  - (define-key wakib-keys-overriding-map (kbd "C-S-v") 'counsel-yank-pop)
+  - (use-package flyspell-correct-popup
+  - :config
+  - (define-key popup-menu-keymap (kbd "M-;") 'popup-next)
+  - (define-key popup-menu-keymap (kbd "M-:") 'popup-previous)
+  - (define-key popup-menu-keymap (kbd "M-k") 'popup-next)
+  - (define-key popup-menu-keymap (kbd "M-i") 'popup-previous)
+  - projectile-command-map "C-e p")
+  - (define-key wakib-keys-map [menu-bar project git] `(menu-item ,"Git ..." magit-status :keys "C-e g"))
+  - :bind ("C-y" . ivy-yasnippet)
+  - (define-key company-active-map (kbd "<tab>") 'company-complete)
+  - (define-key company-active-map (kbd "<return>") nil)
+  - (define-key company-active-map (kbd "RET") nil)
+  - :bind ("M-A" . er/expand-region)
+  - :bind ("M-m" . avy-goto-char)
+  - :bind ("M-H" . switch-window)
+  - ("M-S" . set-rectangular-region-anchor)
+  - :map wakib-keys-overriding-map
+  - ("C-." . mc/mark-next-like-this)
+  - ("C-," . mc/mark-previous-like-this)
+  - ("<C-down-mouse-1>" . mc/add-cursor-on-click)
+
+** Wakib Table Of Shortcuts
+
+| Shortcut     | Function                               |
+|--------------+----------------------------------------|
+| C-+          | text-scale-increase                    |
+| C--          | text-scale-decrease                    |
+| C-;          | comment-line                           |
+| C-=          | text-scale-increase                    |
+| C-a          | mark-whole-buffer                      |
+| C-b          | switch-to-buffer                       |
+| C-c          | kill-ring-save                         |
+| C-f          | isearch-forward                        |
+| C-n          | wakib-new-empty-buffer                 |
+| C-<next>     | next-buffer                            |
+| C-o          | find-file                              |
+| C-p          | print-buffer                           |
+| C-<prior>    | previous-buffer                        |
+| C-q          | save-buffers-kill-terminal             |
+| C-r          | query-replace                          |
+| <C-return>   | wakib-insert-line-after                |
+| C-s          | save-buffer                            |
+| C-S-f        | isearch-backward                       |
+| C-S-o        | revert-buffer                          |
+| C-S-r        | query-replace-regexp                   |
+| <C-S-return> | wakib-insert-line-before               |
+| C-S-s        | write-file                             |
+| C-v          | yank                                   |
+| C-w          | kill-current-buffer                    |
+| C-x          | kill-region                            |
+| C-z          | undo                                   |
+| <escape>     | keyboard-quit                          |
+| M-#          | delete-window                          |
+| M-,          | backward-sexp                          |
+| M-.          | forward-sexp                           |
+| M-:          | wakib-previous                         |
+| M-;          | wakib-next                             |
+| M-$          | split-window-below                     |
+| M-3          | delete-other-windows                   |
+| M-4          | split-window-right                     |
+| M-a          | wakib-select-line-block-all            |
+| M-d          | delete-backward-char                   |
+| M-e          | backward-kill-word                     |
+| M-E          | wakib-backward-kill-line               |
+| M-f          | delete-char                            |
+| M-<f4>       | save-buffers-kill-emacs                |
+| M-h          | other-window                           |
+| M-i          | previous-line                          |
+| M-I          | scroll-down-command                    |
+| M-j          | left-char                              |
+| M-J          | backward-paragraph                     |
+| M-k          | next-line                              |
+| M-K          | scroll-up-command                      |
+| M-l          | right-char                             |
+| M-L          | forward-paragraph                      |
+| M-M          | goto-line                              |
+| M-n          | beginning-of-buffer                    |
+| M-N          | end-of-buffer                          |
+| M-o          | forward-word                           |
+| M-O          | move-end-of-line                       |
+| M-r          | kill-word                              |
+| M-R          | kill-line                              |
+| M-s          | set-mark-command                       |
+| M-S-s        | set-rectangular-region-anchor          |
+| M-u          | backward-word                          |
+| M-U          | wakib-back-to-indentation-or-beginning |
+| M-w          | kill-whole-line                        |
+| M-X          | pp-eval-expression                     |
