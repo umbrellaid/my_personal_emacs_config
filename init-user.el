@@ -1,5 +1,36 @@
 ;; Place all local configuration options here
 
+(if (equal window-system 'w32)
+
+    ;; All the following code will be executed ONLY if window-system is 'w32
+    (progn
+      (setenv "HOME" "C:\\Users\\recordr\\AppData\\Roaming\\")
+      (setenv "PATH" (concat (getenv "PATH") ":C:/ProgramData/chocoportable/bin"))
+      (setq exec-path (append exec-path '("C:/ProgramData/chocoportable/bin")))
+
+      ;; The rest are wrapped into progn to allow after-load to function
+      (progn
+	(with-eval-after-load "ispell"
+          (add-to-list 'ispell-hunspell-dict-paths-alist '("en_US" "C:/Hunspell/en_US.aff")))
+	(global-unset-key (kbd "<scroll>"))
+	(global-set-key (kbd "<scroll>") 'ignore)
+	(setq w32-scroll-lock-modifier nil)
+	(setq ispell-program-name "hunspell")
+	(setenv "LANG" "en_US")
+	(setq ispell-dictionary "en_US")
+	)
+
+      ) ;; End of the progn
+
+  ;; Code for when window-system is 'x (or anything other than 'w32)
+  ;; Add what should be executed only when under X windows
+  (if (equal window-system 'x)
+      (progn
+	;; Your X11-specific configurations here
+	))
+  ) ;; End of the main if
+
+
 (use-package emacs
   :init
   (set-language-environment "UTF-8")
@@ -37,22 +68,11 @@
 
 (toggle-frame-maximized)
 
-(setq python-shell-interpreter "/usr/bin/python3.11")
+(when (equal window-system 'x)
+  (setq python-shell-interpreter "/usr/bin/python3.11"))
 
 ;; Automatically create closing parenthesis/quote
 (electric-pair-mode 1)
-
-;; Auto-save org-mode buffers
-;; This is set to only save org-mode-buffers in "~/MEGA/org/"
-;; You can adjust it to fit your needs
-(add-hook 'auto-save-hook 'save-my-org-buffers)
-(defun save-my-org-buffers()
-  (interactive)
-  (save-some-buffers t (lambda ()
-			 (and buffer-file-name
-			      (eq major-mode 'org-mode)
-			      (string= (expand-file-name "./")
-				       (expand-file-name "~/MEGA/org/"))))))
 
 (use-package org
   )
@@ -171,26 +191,25 @@
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
   )
 
-(use-package greader
-  :config
-  (setq greader-espeak-rate 450)
+
+(if (equal window-system 'x)
+    (progn
+      (use-package greader
+        :config
+        (setq greader-espeak-rate 450))
+      (use-package elfeed
+        :config
+        (setq elfeed-feeds
+              '(("http://nullprogram.com/feed/" emacs)
+                ("https://planet.emacslife.com/atom.xml" emacs)
+                ("https://www.reddit.com/r/emacs.rss" emacs)
+                ("https://protesilaos.com/master.xml" emacs)
+                ("https://sachachua.com/blog/feed" emacs)
+                ("https://www.reddit.com/r/orgmode.rss" emacs)
+                ("https://karthinks.com/index.xml" emacs)
+                ("https://draculatheme.com/rss.xml" theme)))))
   )
 
-(use-package elfeed
-  :config
-  (setq elfeed-feeds
-	'(
-          ("http://nullprogram.com/feed/" emacs)
-          ("https://planet.emacslife.com/atom.xml" emacs)
-          ("https://www.reddit.com/r/emacs.rss" emacs)
-          ("https://protesilaos.com/master.xml" emacs)
-          ("https://sachachua.com/blog/feed" emacs)
-          ("https://www.reddit.com/r/orgmode.rss" emacs)
-          ("https://karthinks.com/index.xml" emacs)
-          ("https://draculatheme.com/rss.xml" theme)
-          )
-	)
-  )
 
 (use-package treemacs
   :hook (after-init . treemacs)
@@ -211,7 +230,7 @@
   :hook (after-init . doom-modeline-mode)
   )
 
-(defun my-reindent-file ()
+(defun drr-my-reindent-file ()
   "Reindent the entire file and return to the original cursor position."
   (interactive)
   (let ((original-line (line-number-at-pos))
@@ -223,7 +242,7 @@
     (move-to-column original-column nil) ; Return to the original column
     ))
 
-(global-set-key (kbd "<pause>") 'my-reindent-file) ; Bind to pause key
+(global-set-key (kbd "<pause>") 'drr-my-reindent-file) ; Bind to pause key
 
 (define-key dired-mode-map (kbd "E")
 	    (defun open-window-manager ()
@@ -239,62 +258,85 @@
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-(defcustom ispell-common-dictionaries
-  '("en")
-  "List of dictionaries for common use"
-  :group 'ispell)
+(if (equal window-system 'w32)
+    (defcustom ispell-common-dictionaries '("en_US") "List of dictionaries for common use" :group 'ispell)
+  (defcustom ispell-common-dictionaries '("en") "List of dictionaries for common use" :group 'ispell))
 
-(setq-default ispell-dictionary (car ispell-common-dictionaries))
+    (setq-default ispell-dictionary (car ispell-common-dictionaries))
 
-(define-key flyspell-mode-map (kbd "C-x M-4")
-	    (defun flyspell-buffer-or-region ()
-	      (interactive)
-	      (if (region-active-p)
-		  (flyspell-region (region-beginning) (region-end))
-		(flyspell-buffer))))
+    (define-key flyspell-mode-map (kbd "C-x M-4")
+		(defun flyspell-buffer-or-region ()
+		  (interactive)
+		  (if (region-active-p)
+		      (flyspell-region (region-beginning) (region-end))
+		    (flyspell-buffer))))
 
-(require 'ibuffer nil t)
-;; ibuffer groups
-(setq-default ibuffer-saved-filter-groups
-              (quote (("default"
-                       ("org"  (mode . org-mode))
-                       ("dired" (mode . dired-mode))
-                       ("D" (mode . d-mode))
-                       ("C/C++" (or
-                                 (mode . cc-mode)
-                                 (mode . c-mode)
-                                 (mode . c++-mode)))
-                       ("magit" (name . "^\\*magit"))
-                       ("Markdown" (mode . markdown-mode))
-                       ("emacs" (name . "^\\*Messages\\*$"))
-                       ("shell commands" (name . "^\\*.*Shell Command\\*"))))))
-(add-hook 'ibuffer-mode-hook
-          (lambda ()
-            (ibuffer-switch-to-saved-filter-groups "default")))
+    (require 'ibuffer nil t)
+    ;; ibuffer groups
+    (setq-default ibuffer-saved-filter-groups
+		  (quote (("default"
+			   ("org"  (mode . org-mode))
+			   ("dired" (mode . dired-mode))
+			   ("D" (mode . d-mode))
+			   ("C/C++" (or
+                                     (mode . cc-mode)
+                                     (mode . c-mode)
+                                     (mode . c++-mode)))
+			   ("magit" (name . "^\\*magit"))
+			   ("Markdown" (mode . markdown-mode))
+			   ("emacs" (name . "^\\*Messages\\*$"))
+			   ("shell commands" (name . "^\\*.*Shell Command\\*"))))))
+    (add-hook 'ibuffer-mode-hook
+              (lambda ()
+		(ibuffer-switch-to-saved-filter-groups "default")))
 
-(global-set-key (kbd "\C-x \C-b") 'ibuffer)
+    (global-set-key (kbd "\C-x \C-b") 'ibuffer)
 
-(define-key global-map "\C-c+"
-	    (defun increment-decimal-number-at-point (&optional arg)
-	      "Increment the number at point by `arg'."
-	      (interactive "p*")
-	      (save-excursion
-		(save-match-data
-		  (let (inc-by field-width answer)
-		    (setq inc-by (if arg arg 1))
-		    (skip-chars-backward "0123456789")
-		    (when (re-search-forward "[0-9]+" nil t)
-		      (setq field-width (- (match-end 0) (match-beginning 0)))
-		      (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
-		      (when (< answer 0)
-			(setq answer (+ (expt 10 field-width) answer)))
-		      (replace-match (format (concat "%0" (int-to-string field-width) "d")
-					     answer))))))))
+    (define-key global-map "\C-c+"
+		(defun increment-decimal-number-at-point (&optional arg)
+		  "Increment the number at point by `arg'."
+		  (interactive "p*")
+		  (save-excursion
+		    (save-match-data
+		      (let (inc-by field-width answer)
+			(setq inc-by (if arg arg 1))
+			(skip-chars-backward "0123456789")
+			(when (re-search-forward "[0-9]+" nil t)
+			  (setq field-width (- (match-end 0) (match-beginning 0)))
+			  (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
+			  (when (< answer 0)
+			    (setq answer (+ (expt 10 field-width) answer)))
+			  (replace-match (format (concat "%0" (int-to-string field-width) "d")
+						 answer))))))))
 
-(use-package olivetti
-  )
+    (use-package olivetti
+      )
 
-(use-package notmuch
-  )
+    (when (equal window-system 'x)
+      (use-package notmuch))
 
-(provide 'init-user)
+    (defun drr-insert-date-stamp-prefix ()
+      "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."
+      (interactive)
+      (insert (format-time-string "Date: %m-%d-%Y")))
+    (defun drr-insert-date-stamp ()
+      "Inserts the current date in mm-dd-yyyy format"
+      (interactive)
+      (insert (format-time-string "%m-%d-%Y")))
+    (defun drr-locate-current-file-in-explorer ()
+      (interactive)
+      (cond
+       ;; In buffers with file name
+       ((buffer-file-name)
+	(shell-command (concat "start explorer /e,/select,\"" (replace-regexp-in-string "/" "\\\\" (buffer-file-name)) "\"")))
+       ;; In dired mode
+       ((eq major-mode 'dired-mode)
+	(shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (dired-current-directory)) "\"")))
+       ;; In eshell mode
+       ((eq major-mode 'eshell-mode)
+	(shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (eshell/pwd)) "\"")))
+       ;; Use default-directory as last resource
+       (t
+	(shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" default-directory) "\"")))))
+
+    (provide 'init-user)
