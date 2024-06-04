@@ -69,7 +69,7 @@
 (toggle-frame-maximized)
 
 (when (equal window-system 'x)
-  (setq python-shell-interpreter "/usr/bin/python3.11"))
+  (setq python-shell-interpreter "/usr/bin/python3.12"))
 
 ;; Automatically create closing parenthesis/quote
 (electric-pair-mode 1)
@@ -196,7 +196,7 @@
     (progn
       (use-package greader
         :config
-        (setq greader-espeak-rate 450))
+        (setq greader-espeak-rate 375))
       (use-package elfeed
         :config
         (setq elfeed-feeds
@@ -209,7 +209,6 @@
                 ("https://karthinks.com/index.xml" emacs)
                 ("https://draculatheme.com/rss.xml" theme)))))
   )
-
 
 (use-package treemacs
   :hook (after-init . treemacs)
@@ -252,7 +251,7 @@
 		(if (equal window-system 'w32)
 		    (async-shell-command "explorer .")
 		  (if (equal window-system 'x)
-		      (async-shell-command "dolphin ."))))))
+		      (async-shell-command "thunar ."))))))
 
 (require 'flyspell)
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -260,83 +259,83 @@
 
 (if (equal window-system 'w32)
     (defcustom ispell-common-dictionaries '("en_US") "List of dictionaries for common use" :group 'ispell)
-  (defcustom ispell-common-dictionaries '("en") "List of dictionaries for common use" :group 'ispell))
+  (defcustom ispell-common-dictionaries '("en_US") "List of dictionaries for common use" :group 'ispell))
 
-    (setq-default ispell-dictionary (car ispell-common-dictionaries))
+(setq-default ispell-dictionary (car ispell-common-dictionaries))
 
-    (define-key flyspell-mode-map (kbd "C-x M-4")
-		(defun flyspell-buffer-or-region ()
-		  (interactive)
-		  (if (region-active-p)
-		      (flyspell-region (region-beginning) (region-end))
-		    (flyspell-buffer))))
+(define-key flyspell-mode-map (kbd "C-x M-4")
+	    (defun flyspell-buffer-or-region ()
+	      (interactive)
+	      (if (region-active-p)
+		  (flyspell-region (region-beginning) (region-end))
+		(flyspell-buffer))))
 
-    (require 'ibuffer nil t)
-    ;; ibuffer groups
-    (setq-default ibuffer-saved-filter-groups
-		  (quote (("default"
-			   ("org"  (mode . org-mode))
-			   ("dired" (mode . dired-mode))
-			   ("D" (mode . d-mode))
-			   ("C/C++" (or
-                                     (mode . cc-mode)
-                                     (mode . c-mode)
-                                     (mode . c++-mode)))
-			   ("magit" (name . "^\\*magit"))
-			   ("Markdown" (mode . markdown-mode))
-			   ("emacs" (name . "^\\*Messages\\*$"))
-			   ("shell commands" (name . "^\\*.*Shell Command\\*"))))))
-    (add-hook 'ibuffer-mode-hook
-              (lambda ()
-		(ibuffer-switch-to-saved-filter-groups "default")))
+(require 'ibuffer nil t)
+;; ibuffer groups
+(setq-default ibuffer-saved-filter-groups
+	      (quote (("default"
+		       ("org"  (mode . org-mode))
+		       ("dired" (mode . dired-mode))
+		       ("D" (mode . d-mode))
+		       ("C/C++" (or
+                                 (mode . cc-mode)
+                                 (mode . c-mode)
+                                 (mode . c++-mode)))
+		       ("magit" (name . "^\\*magit"))
+		       ("Markdown" (mode . markdown-mode))
+		       ("emacs" (name . "^\\*Messages\\*$"))
+		       ("shell commands" (name . "^\\*.*Shell Command\\*"))))))
+(add-hook 'ibuffer-mode-hook
+          (lambda ()
+	    (ibuffer-switch-to-saved-filter-groups "default")))
 
-    (global-set-key (kbd "\C-x \C-b") 'ibuffer)
+(global-set-key (kbd "\C-x \C-b") 'ibuffer)
 
-    (define-key global-map "\C-c+"
-		(defun increment-decimal-number-at-point (&optional arg)
-		  "Increment the number at point by `arg'."
-		  (interactive "p*")
-		  (save-excursion
-		    (save-match-data
-		      (let (inc-by field-width answer)
-			(setq inc-by (if arg arg 1))
-			(skip-chars-backward "0123456789")
-			(when (re-search-forward "[0-9]+" nil t)
-			  (setq field-width (- (match-end 0) (match-beginning 0)))
-			  (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
-			  (when (< answer 0)
-			    (setq answer (+ (expt 10 field-width) answer)))
-			  (replace-match (format (concat "%0" (int-to-string field-width) "d")
-						 answer))))))))
+(define-key global-map "\C-c+"
+	    (defun increment-decimal-number-at-point (&optional arg)
+	      "Increment the number at point by `arg'."
+	      (interactive "p*")
+	      (save-excursion
+		(save-match-data
+		  (let (inc-by field-width answer)
+		    (setq inc-by (if arg arg 1))
+		    (skip-chars-backward "0123456789")
+		    (when (re-search-forward "[0-9]+" nil t)
+		      (setq field-width (- (match-end 0) (match-beginning 0)))
+		      (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
+		      (when (< answer 0)
+			(setq answer (+ (expt 10 field-width) answer)))
+		      (replace-match (format (concat "%0" (int-to-string field-width) "d")
+					     answer))))))))
 
-    (use-package olivetti
-      )
+(use-package olivetti
+  )
 
-    (when (equal window-system 'x)
-      (use-package notmuch))
+(when (equal window-system 'x)
+  (use-package notmuch))
 
-    (defun drr-insert-date-stamp-prefix ()
-      "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."
-      (interactive)
-      (insert (format-time-string "Date: %m-%d-%Y")))
-    (defun drr-insert-date-stamp ()
-      "Inserts the current date in mm-dd-yyyy format"
-      (interactive)
-      (insert (format-time-string "%m-%d-%Y")))
-    (defun drr-locate-current-file-in-explorer ()
-      (interactive)
-      (cond
-       ;; In buffers with file name
-       ((buffer-file-name)
-	(shell-command (concat "start explorer /e,/select,\"" (replace-regexp-in-string "/" "\\\\" (buffer-file-name)) "\"")))
-       ;; In dired mode
-       ((eq major-mode 'dired-mode)
-	(shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (dired-current-directory)) "\"")))
-       ;; In eshell mode
-       ((eq major-mode 'eshell-mode)
-	(shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (eshell/pwd)) "\"")))
-       ;; Use default-directory as last resource
-       (t
-	(shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" default-directory) "\"")))))
+(defun drr-insert-date-stamp-prefix ()
+  "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."
+  (interactive)
+  (insert (format-time-string "Date: %m-%d-%Y")))
+(defun drr-insert-date-stamp ()
+  "Inserts the current date in mm-dd-yyyy format"
+  (interactive)
+  (insert (format-time-string "%m-%d-%Y")))
+(defun drr-locate-current-file-in-explorer ()
+  (interactive)
+  (cond
+   ;; In buffers with file name
+   ((buffer-file-name)
+    (shell-command (concat "start explorer /e,/select,\"" (replace-regexp-in-string "/" "\\\\" (buffer-file-name)) "\"")))
+   ;; In dired mode
+   ((eq major-mode 'dired-mode)
+    (shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (dired-current-directory)) "\"")))
+   ;; In eshell mode
+   ((eq major-mode 'eshell-mode)
+    (shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (eshell/pwd)) "\"")))
+   ;; Use default-directory as last resource
+   (t
+    (shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" default-directory) "\"")))))
 
-    (provide 'init-user)
+(provide 'init-user)

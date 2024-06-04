@@ -366,12 +366,12 @@
 
 ;; Start with a blank buffer unless Emacs was started with a file to open.
 ;; Otherwise causes split window when opening file from command line or GUI.
-(unless (< 1 (length command-line-args)) (setq initial-buffer-choice (lambda (&optional _)
-			      (let ((buf (generate-new-buffer "untitled")))
-				(set-buffer-major-mode buf)
-				(message "New Buffer Started")
-				(message (number-to-string (length command-line-args)))
-				buf))))
+;; (unless (< 1 (length command-line-args)) (setq initial-buffer-choice (lambda (&optional _)
+;; 			      (let ((buf (generate-new-buffer "untitled")))
+;; 				(set-buffer-major-mode buf)
+;; 				(message "New Buffer Started")
+;; 				(message (number-to-string (length command-line-args)))
+;; 				buf))))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (if (file-exists-p custom-file)
