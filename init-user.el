@@ -229,20 +229,6 @@
   :hook (after-init . doom-modeline-mode)
   )
 
-(defun drr-my-reindent-file ()
-  "Reindent the entire file and return to the original cursor position."
-  (interactive)
-  (let ((original-line (line-number-at-pos))
-        (original-column (current-column)))
-    (goto-char (point-min)) ; Move to the beginning of the file
-    (mark-whole-buffer)    ; Select all lines
-    (indent-region (point-min) (point-max)) ; Reindent the entire buffer (equivalent to C-M-\)
-    (goto-line original-line) ; Return to the original line
-    (move-to-column original-column nil) ; Return to the original column
-    ))
-
-(global-set-key (kbd "<pause>") 'drr-my-reindent-file) ; Bind to pause key
-
 (define-key dired-mode-map (kbd "E")
 	    (defun open-window-manager ()
 	      "Open default system windows manager in current directory"
@@ -314,14 +300,36 @@
 (when (equal window-system 'x)
   (use-package notmuch))
 
+(use-package casual
+  :ensure t
+  :bind (:map calc-mode-map ("C-o" . 'casual-calc-tmenu)))
+
+(use-package casual-info
+  :ensure t
+  :bind (:map Info-mode-map ("C-o" . 'casual-info-tmenu)))
+
+(use-package casual-dired
+  :ensure t
+  :bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
+
+(use-package casual-avy
+  :ensure t
+  :bind ("M-g" . casual-avy-tmenu))
+
+(use-package cc-isearch-menu
+  :ensure t
+  :bind (:map isearch-mode-map ("<f2>" . 'cc-isearch-menu-transient)))
+
 (defun drr-insert-date-stamp-prefix ()
   "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."
   (interactive)
   (insert (format-time-string "Date: %m-%d-%Y")))
+
 (defun drr-insert-date-stamp ()
   "Inserts the current date in mm-dd-yyyy format"
   (interactive)
   (insert (format-time-string "%m-%d-%Y")))
+
 (defun drr-locate-current-file-in-explorer ()
   (interactive)
   (cond
@@ -337,5 +345,21 @@
    ;; Use default-directory as last resource
    (t
     (shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" default-directory) "\"")))))
+
+(defun drr-my-reindent-file ()
+  "Reindent the entire file and return to the original cursor position."
+  (interactive)
+  (let ((original-line (line-number-at-pos))
+        (original-column (current-column)))
+    (goto-char (point-min)) ; Move to the beginning of the file
+    (mark-whole-buffer)    ; Select all lines
+    (indent-region (point-min) (point-max)) ; Reindent the entire buffer (equivalent to C-M-\)
+    (goto-line original-line) ; Return to the original line
+    (move-to-column original-column nil) ; Return to the original column
+    ))
+
+(global-set-key (kbd "<pause>") 'drr-my-reindent-file) ; Bind to pause key
+
+(repeat-mode 1)
 
 (provide 'init-user)

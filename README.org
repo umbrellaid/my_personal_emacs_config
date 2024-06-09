@@ -22,6 +22,7 @@ them together with small tweaks to fit my needs and preferences.
 
 ** Links To Resources
 
+- [[https://github.com/kickingvegas/casual-suite][Casual Suite - Casual porcelains (Casual Calc/Dired/Avy/Info) - cc-isearch-menu]]
 - [[https://github.com/snosov1/dot-emacs][Dot-Emacs - Snosov1]]
 - [[https://github.com/susam/emfy][Emacs for You (Emfy)]]
 - [[https://github.com/james-stoup/emacs-org-mode-tutorial][Emacs-Org-Mode-Tutorial]]
@@ -32,6 +33,12 @@ them together with small tweaks to fit my needs and preferences.
 
 ** Random Notes
 
+- I start with Wakib keys disabled and then I enable with F12 and disable with F11
+- (define-key calc-mode-map (kbd "C-o") #'casual-calc-tmenu)
+- (define-key dired-mode-map (kbd "C-o") #'casual-dired-tmenu)
+- (define-key info-mode-map (kbd "C-o") #'casual-info-tmenu)
+- (keymap-global-set "M-g" #'casual-avy-tmenu)
+- (define-key isearch-mode-map (kbd "<f2>") #'cc-isearch-menu-transient)
 - C-d + - to increment number - also works with multiple cursors (multiple cursors also has a built in function that does this)
 - C-e C-b - ibuffer
 - C-e M-4 - turn on flyspell for buffer or selection

@@ -47,7 +47,6 @@
 (use-package wakib-keys
   :diminish wakib-keys
   :config
-  (wakib-keys 1)
   (add-hook 'after-change-major-mode-hook 'wakib-update-major-mode-map)
   (add-hook 'menu-bar-update-hook 'wakib-update-minor-mode-maps)
   ;; Modifying other modules
@@ -60,6 +59,24 @@
   (define-key isearch-mode-map (kbd "C-v") 'isearch-yank-kill)
   (define-key isearch-mode-map (kbd "M-d") 'isearch-delete-char))
 
+(defun wakib-keys-0 ()
+  (interactive)
+  (wakib-keys 0)
+  (message "Wakib keys disabled"))
+
+(defun wakib-keys-1 ()
+  (interactive)
+  (wakib-keys 1)
+  (message "Wakib keys enabled"))
+
+;; Unbind F11 from its current function (toggle-frame-fullscreen)
+(global-unset-key [f11])
+
+;; Bind F11 to wakib-keys-0
+(global-set-key [f11] 'wakib-keys-0)
+
+;; Bind F12 to wakib-keys-1
+(global-set-key [f12] 'wakib-keys-1)
 
 ;; -------------------
 ;; Initial Setup
@@ -167,7 +184,7 @@
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (define-key ivy-minibuffer-map [remap keyboard-quit] 'minibuffer-keyboard-quit)
-;;  (setq enable-recursive-minibuffers t)
+  ;;  (setq enable-recursive-minibuffers t)
   (setq ivy-count-format "")
   (setq ivy-initial-inputs-alist nil))
 
@@ -192,14 +209,14 @@
   (define-key flyspell-mouse-map [mouse-2] nil)
   (define-key flyspell-mouse-map [mouse-3] 'flyspell-correct-word)
   (defun wakib-next-more (&optional arg)
-  "Correct previous word"
-  (interactive "p")
-  (cond ((and flyspell-mode
-	      (or (wakib-find-overlays-specifying 'flyspell-overlay)
-		  (save-excursion
-		    (backward-word)
-		    (wakib-find-overlays-specifying 'flyspell-overlay))))
-	(flyspell-correct-wrapper))))
+    "Correct previous word"
+    (interactive "p")
+    (cond ((and flyspell-mode
+		(or (wakib-find-overlays-specifying 'flyspell-overlay)
+		    (save-excursion
+		      (backward-word)
+		      (wakib-find-overlays-specifying 'flyspell-overlay))))
+	   (flyspell-correct-wrapper))))
   :init
   (setq flyspell-correct-interface #'flyspell-correct-popup))
 
@@ -218,8 +235,8 @@
   (wakib-update-menu-map (global-key-binding [menu-bar tools Projectile])
 			 projectile-command-map "C-e p")
   (define-key wakib-keys-map [menu-bar project]
-	    `(menu-item ,"Project" ,(global-key-binding [menu-bar tools Projectile])
-			:visible (projectile-project-p)))
+	      `(menu-item ,"Project" ,(global-key-binding [menu-bar tools Projectile])
+			  :visible (projectile-project-p)))
   (define-key wakib-keys-map [menu-bar project seperator1] `(menu-item ,"--" nil))
   (define-key wakib-keys-map [menu-bar project git] `(menu-item ,"Git ..." magit-status :keys "C-e g"))
   (global-unset-key [menu-bar tools Projectile]))
@@ -303,9 +320,9 @@
   :bind
   (("M-S" . set-rectangular-region-anchor)
    :map wakib-keys-overriding-map
-	("C-." . mc/mark-next-like-this)
-	("C-," . mc/mark-previous-like-this)
-	("<C-down-mouse-1>" . mc/add-cursor-on-click)))
+   ("C-." . mc/mark-next-like-this)
+   ("C-," . mc/mark-previous-like-this)
+   ("<C-down-mouse-1>" . mc/add-cursor-on-click)))
 
 ;; -------------------
 ;; diff-hl
