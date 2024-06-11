@@ -53,7 +53,7 @@
 ;; M-x display-fill-column-indicator-mode
 ;; to show vertical line at the fill-column
 ;; highlight text and press ALT-q to fill text to that width
-(setq fill-column 80)
+(setq-default fill-column 80)
 
 ;; Default to y/n instead of yes/no
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -92,6 +92,10 @@
   ;; Maybe define some palette overrides, such as by using our presets
   (setq modus-themes-common-palette-overrides
         modus-themes-preset-overrides-intense)
+
+  (modus-themes-with-colors
+    (custom-set-faces
+     `(fill-column-indicator ((,c :height 1.0 :background ,bg-inactive :foreground ,bg-inactive)))))
 
   ;; Load the theme of your choice.
   (load-theme 'modus-operandi)
@@ -196,7 +200,7 @@
     (progn
       (use-package greader
         :config
-        (setq greader-espeak-rate 375))
+        (setq greader-espeak-rate 300))
       (use-package elfeed
         :config
         (setq elfeed-feeds
@@ -319,6 +323,14 @@
 (use-package cc-isearch-menu
   :ensure t
   :bind (:map isearch-mode-map ("<f2>" . 'cc-isearch-menu-transient)))
+
+;; 1  (use-package casual-calc
+;; 2    :ensure t
+;; 3    :bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
+;; 4
+;; 5  (use-package casual-isearch
+;; 6    :ensure t
+;; 7    :bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
 
 (defun drr-insert-date-stamp-prefix ()
   "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."

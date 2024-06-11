@@ -22,7 +22,7 @@ them together with small tweaks to fit my needs and preferences.
 
 ** Links To Resources
 
-- [[https://github.com/kickingvegas/casual-suite][Casual Suite - Casual porcelains (Casual Calc/Dired/Avy/Info) - cc-isearch-menu]]
+- [[https://github.com/kickingvegas/casual-suite][Casual Suite - Casual porcelains (Casual Calc/Dired/Avy/Info/Isearch)]]
 - [[https://github.com/snosov1/dot-emacs][Dot-Emacs - Snosov1]]
 - [[https://github.com/susam/emfy][Emacs for You (Emfy)]]
 - [[https://github.com/james-stoup/emacs-org-mode-tutorial][Emacs-Org-Mode-Tutorial]]
