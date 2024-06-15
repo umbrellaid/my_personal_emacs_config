@@ -124,8 +124,8 @@
 
 ;; Disable backup and lockfile
 ;; I hate browsing directories and seeing 'Emacs was Here' everywhere
-(setq create-lockfiles nil
-      make-backup-files nil)
+;; (setq create-lockfiles nil
+;;       make-backup-files nil)
 
 
 
@@ -379,7 +379,7 @@
 ;; Setup Splash Screen
 (setq inhibit-startup-screen t)
 (setq-default major-mode 'org-mode)
-(setq-default initial-scratch-message ";; Emacs lisp scratch buffer. Happy hacking.\n\n")
+(setq-default initial-scratch-message ";; Emacs lisp scratch buffer.\n\n")
 
 ;; Start with a blank buffer unless Emacs was started with a file to open.
 ;; Otherwise causes split window when opening file from command line or GUI.

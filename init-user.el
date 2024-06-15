@@ -253,7 +253,7 @@
 
 (setq-default ispell-dictionary (car ispell-common-dictionaries))
 
-(define-key flyspell-mode-map (kbd "C-x M-4")
+(define-key flyspell-mode-map (kbd "C-x M-$")
 	    (defun flyspell-buffer-or-region ()
 	      (interactive)
 	      (if (region-active-p)
@@ -280,23 +280,6 @@
 	    (ibuffer-switch-to-saved-filter-groups "default")))
 
 (global-set-key (kbd "\C-x \C-b") 'ibuffer)
-
-(define-key global-map "\C-c+"
-	    (defun increment-decimal-number-at-point (&optional arg)
-	      "Increment the number at point by `arg'."
-	      (interactive "p*")
-	      (save-excursion
-		(save-match-data
-		  (let (inc-by field-width answer)
-		    (setq inc-by (if arg arg 1))
-		    (skip-chars-backward "0123456789")
-		    (when (re-search-forward "[0-9]+" nil t)
-		      (setq field-width (- (match-end 0) (match-beginning 0)))
-		      (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
-		      (when (< answer 0)
-			(setq answer (+ (expt 10 field-width) answer)))
-		      (replace-match (format (concat "%0" (int-to-string field-width) "d")
-					     answer))))))))
 
 (use-package olivetti
   )

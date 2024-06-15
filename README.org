@@ -16,9 +16,9 @@ spacemacs coming in as a close second. They both are really excellent
 and they are a great tool for many people. I still recommend them if
 you want a distribution.
 
-To create this customized configuration I am using existing items
-noted below. This is just me taking other people's work and blending
-them together with small tweaks to fit my needs and preferences.
+To create this customized configuration I am using existing the items noted
+below. This is just me taking other people's work and blending them together
+with small tweaks to fit my needs and preferences.
 
 ** Links To Resources
 
@@ -34,22 +34,29 @@ them together with small tweaks to fit my needs and preferences.
 ** Random Notes
 
 - I start with Wakib keys disabled and then I enable with F12 and disable with F11
+- I like switching between vanilla emacs and Wakib keys depending on what I am doing
+- Keep in mind that C-x is rebound in Wakib keys mode to C-e and C-c is rebound to C-d
+- when Wakib keys is off you use C-x and C-c as normal
+- this is only for the initial prefix any key combos after the initial prefix are the same as vanilla Emacs
+- the author of Wakib keys has another package if you wanted the C-x and C-c to always be rebound the way it is when Wakib keys is on but I prefer switching back and forth
+- copy and pasting: if you enable wakib keys then copy, cut paste work like most apps with C-c / C-x / C-v
+- with wakib keys disabled then you have a mix of Emacs defaults but with some changes
+- to copy is M-w to cut is C-w and
 - to paste either SHIFT + INSERT Key (INS) or M-y and select item from the kill ring (This is because C-y that you would normally use is rebound even if Wakib keys is turned off)
 - (define-key calc-mode-map (kbd "C-o") #'casual-calc-tmenu)
 - (define-key dired-mode-map (kbd "C-o") #'casual-dired-tmenu)
 - (define-key info-mode-map (kbd "C-o") #'casual-info-tmenu)
 - (keymap-global-set "M-g" #'casual-avy-tmenu)
 - (define-key isearch-mode-map (kbd "<f2>") #'cc-isearch-menu-transient)
-- C-d + - to increment number - also works with multiple cursors (multiple cursors also has a built in function that does this)
-- C-e C-b - ibuffer
-- C-e M-4 - turn on flyspell for buffer or selection
-- in dired use E to luanch in explorer / dolphin
-- press pause key to reindent file using emacs smarts
+- C-x (Wakib: C-e) C-b - ibuffer
+- C-x (Wakib: C-e) M-4 - turn on flyspell for buffer or selection
+- in dired use E to launch in explorer / dolphin
+- press pause key to re-indent file using emacs smarts
 - ("M-0"       . treemacs-select-window)
-- ("C-x t t"   . treemacs)
-- ("C-x t C-t" . treemacs-find-file)
-- ("C-x t M-t" . treemacs-find-tag)
-- (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
+- ("C-x (Wakib: C-e) t t"   . treemacs)
+- ("C-x (Wakib: C-e) t C-t" . treemacs-find-file)
+- ("C-x (Wakib: C-e) t M-t" . treemacs-find-tag)
+- (define-key global-map (kbd "C-c (Wakib: C-d) f") #'fontaine-set-preset)
 - (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 - ;; In an emacs lisp scratch buffer you can run this code to double
 - ;; check value of variable:
@@ -65,7 +72,7 @@ them together with small tweaks to fit my needs and preferences.
 - (define-key isearch-mode-map (kbd "C-v") 'isearch-yank-kill)
 - (define-key isearch-mode-map (kbd "M-d") 'isearch-delete-char)
 - (("C-S-z" . undo-tree-redo))
-- (("C-x g" . magit-status ))
+- (("C-x (Wakib: C-e) g" . magit-status ))
 - (define-key wakib-keys-overriding-map (kbd "C-S-v") 'counsel-yank-pop)
 - (use-package flyspell-correct-popup
 - :config
