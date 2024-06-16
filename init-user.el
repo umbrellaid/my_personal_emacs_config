@@ -1,13 +1,10 @@
 ;; Place all local configuration options here
-
 (if (equal window-system 'w32)
-
     ;; All the following code will be executed ONLY if window-system is 'w32
     (progn
       (setenv "HOME" "C:\\Users\\recordr\\AppData\\Roaming\\")
       (setenv "PATH" (concat (getenv "PATH") ":C:/ProgramData/chocoportable/bin"))
       (setq exec-path (append exec-path '("C:/ProgramData/chocoportable/bin")))
-
       ;; The rest are wrapped into progn to allow after-load to function
       (progn
 	(with-eval-after-load "ispell"
@@ -19,9 +16,7 @@
 	(setenv "LANG" "en_US")
 	(setq ispell-dictionary "en_US")
 	)
-
       ) ;; End of the progn
-
   ;; Code for when window-system is 'x (or anything other than 'w32)
   ;; Add what should be executed only when under X windows
   (if (equal window-system 'x)
@@ -30,20 +25,15 @@
 	))
   ) ;; End of the main if
 
-
 (use-package emacs
   :init
   (set-language-environment "UTF-8")
-  (set-default-coding-systems 'utf-8-unix)
   (setq confirm-kill-processes nil)		; Stop confirming the killing of processes
   (setq use-short-answers t)                      ; y-or-n-p makes answering questions faster
   (setq read-process-output-max (* 1024 1024))    ; Increase the amount of data which Emacs reads from the process
   (setq gc-cons-threshold 100000000)
   (setq lsp-idle-delay 0.500)
   )
-
-;; M-x customize-group RET notmuch RET
-;; (autoload 'notmuch "notmuch" "notmuch mail" t)
 
 (setq sentence-end-double-space nil)
 
@@ -115,9 +105,9 @@
   ;; <https://github.com/protesilaos/iosevka-comfy>.
   (setq fontaine-presets
 	'((small
-           :default-family "UbuntuMono Nerd Font"
+           :default-family "Liberation Mono"
            :default-height 115
-           :variable-pitch-family "Ubuntu")
+           :variable-pitch-family "Liberation Sans")
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
            :default-weight semilight
@@ -132,7 +122,7 @@
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
            ;; <https://protesilaos.com/emacs/fontaine>.
-           :default-family "UbuntuMono Nerd Font"
+           :default-family "Liberation Mono"
            :default-weight regular
            :default-height 150
 
@@ -195,7 +185,6 @@
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
   )
 
-
 (if (equal window-system 'x)
     (progn
       (use-package greader
@@ -228,10 +217,6 @@
 (use-package toc-org
   )
 (add-hook 'org-mode-hook 'toc-org-mode)
-
-(use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
-  )
 
 (define-key dired-mode-map (kbd "E")
 	    (defun open-window-manager ()
@@ -287,9 +272,9 @@
 (when (equal window-system 'x)
   (use-package notmuch))
 
-(use-package casual
-  :ensure t
-  :bind (:map calc-mode-map ("C-o" . 'casual-calc-tmenu)))
+;; (use-package casual
+;;   :ensure t
+;;   :bind (:map calc-mode-map ("C-o" . 'casual-calc-tmenu)))
 
 (use-package casual-info
   :ensure t
@@ -303,17 +288,17 @@
   :ensure t
   :bind ("M-g" . casual-avy-tmenu))
 
-(use-package cc-isearch-menu
-  :ensure t
-  :bind (:map isearch-mode-map ("<f2>" . 'cc-isearch-menu-transient)))
+;; (use-package cc-isearch-menu
+;;   :ensure t
+;;   :bind (:map isearch-mode-map ("<f2>" . 'cc-isearch-menu-transient)))
 
-;; 1  (use-package casual-calc
-;; 2    :ensure t
-;; 3    :bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
-;; 4
-;; 5  (use-package casual-isearch
-;; 6    :ensure t
-;; 7    :bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
+;; (use-package casual-calc
+;;   :ensure t
+;;   :bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
+
+;; (use-package casual-isearch
+;;   :ensure t
+;;   :bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
 
 (defun drr-insert-date-stamp-prefix ()
   "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."
@@ -354,6 +339,13 @@
     ))
 
 (global-set-key (kbd "<pause>") 'drr-my-reindent-file) ; Bind to pause key
+
+(defun drr-condense-blank-lines ()
+  "Condense multiple blank lines into a single blank line in the entire buffer."
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward "\n\n+" nil t)
+    (replace-match "\n\n")))
 
 (repeat-mode 1)
 

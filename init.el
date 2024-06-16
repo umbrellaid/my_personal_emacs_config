@@ -5,13 +5,11 @@
 ;;----------------------------------------------------------------------------
 (setq gc-cons-threshold (* 20 1024 1024))
 
-
 ;; ---------------------
 ;; Setup Load Path
 ;; ---------------------
 
 (add-to-list 'load-path (expand-file-name "user" user-emacs-directory))
-
 
 ;; -----------------------
 ;; use-package
@@ -59,25 +57,6 @@
   (define-key isearch-mode-map (kbd "C-v") 'isearch-yank-kill)
   (define-key isearch-mode-map (kbd "M-d") 'isearch-delete-char))
 
-(defun wakib-keys-0 ()
-  (interactive)
-  (wakib-keys 0)
-  (message "Wakib keys disabled"))
-
-(defun wakib-keys-1 ()
-  (interactive)
-  (wakib-keys 1)
-  (message "Wakib keys enabled"))
-
-;; Unbind F11 from its current function (toggle-frame-fullscreen)
-(global-unset-key [f11])
-
-;; Bind F11 to wakib-keys-0
-(global-set-key [f11] 'wakib-keys-0)
-
-;; Bind F12 to wakib-keys-1
-(global-set-key [f12] 'wakib-keys-1)
-
 ;; -------------------
 ;; Initial Setup
 ;; -------------------
@@ -96,7 +75,7 @@
 
 (setq org-export-with-toc nil)
 (setq org-support-shift-select t)
-(setq frame-title-format '((:eval (buffer-name))" [%+] Wakib Emacs"))
+(setq frame-title-format '((:eval (buffer-name))" [%+] Emacs"))
 
 ;; Menu Bars
 ;; TODO - Change bind-key to define-key
@@ -126,8 +105,6 @@
 ;; I hate browsing directories and seeing 'Emacs was Here' everywhere
 ;; (setq create-lockfiles nil
 ;;       make-backup-files nil)
-
-
 
 ;; -------------------
 ;; Theme
@@ -166,14 +143,11 @@
   :bind
   (("C-x g" . magit-status )))
 
-
-
 (use-package exec-path-from-shell
   :disabled
   :config
   (exec-path-from-shell-copy-env "SSH_AGENT_PID")
   (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
-
 
 ;; -------------------
 ;; Ivy
@@ -258,10 +232,8 @@
   (define-key yas-keymap [remap wakib-next] 'yas-next-field)
   (define-key yas-keymap [remap wakib-previous] 'yas-prev-field))
 
-
 (use-package ivy-yasnippet
   :bind ("C-y" . ivy-yasnippet))
-
 
 ;; -------------------
 ;; Company
@@ -332,8 +304,6 @@
   ((prog-mode . turn-on-diff-hl-mode)
    (magit-post-refresh-hook . diff-hl-magit-post-refresh)))
 
-
-
 ;; TODO (change defun rewrite to advice)
 (use-package quickrun
   :init
@@ -348,7 +318,6 @@
 			 (end-of-buffer))))
   :bind
   (([f8] . quickrun )))
-
 
 ;; Better Parenthesis
 ;; (use-package rainbow-delimiters
@@ -394,8 +363,76 @@
 (if (file-exists-p custom-file)
     (load custom-file))
 
-
 ;; Load custom user configurations
 (load "~/.emacs.d/init-user.el" t t)
+
+(defvar wakib-keys-status "W-OFF"
+  "Current status of wakib-keys mode.")
+
+(defun wakib-keys-custom (state)
+  (interactive)
+  (setq wakib-keys-status (if (= state 1) "W-ON" "W-OFF"))
+  ;; Toggle the wakib-keys minor mode
+  (if (= state 1)
+      (progn
+        ;; Enable wakib-keys
+	(wakib-keys 1)
+        (message "Wakib keys enabled"))
+    (progn
+      ;; Disable wakib-keys
+      (wakib-keys 0)
+      (message "Wakib keys disabled")))
+  (force-mode-line-update))
+
+(defun toggle-wakib-keys-0 ()
+  (interactive)
+  (wakib-keys-custom 0))
+
+(defun toggle-wakib-keys-1 ()
+  (interactive)
+  (wakib-keys-custom 1))
+
+;; Unbind F11 from its current function (toggle-frame-fullscreen)
+(global-unset-key [f11])
+
+;; Bind F11 to toggle-wakib-keys-0
+(global-set-key [f11] 'toggle-wakib-keys-0)
+
+;; Bind F12 to toggle-wakib-keys-1
+(global-set-key [f12] 'toggle-wakib-keys-1)
+
+(setq-default mode-line-format
+              (list
+               ;; The current buffer name.
+               '(:eval (propertize "%b " 'face 'font-lock-keyword-face
+                                   'help-echo (buffer-file-name)))
+
+               ;; The current line and column numbers.
+               " (" '(:eval (propertize "%l" 'face 'font-lock-type-face))
+               ","
+               '(:eval (propertize "%c" 'face 'font-lock-type-face))
+               ") "
+
+               ;; The current major mode.
+               "[" '(:eval (propertize "%m" 'face 'font-lock-string-face
+                                       'help-echo buffer-file-coding-system))
+               "] "
+
+               ;; The current wakib-keys status.
+               "[" '(:eval (propertize wakib-keys-status 'face
+                                       (if (string= wakib-keys-status "W-ON")
+                                           'font-lock-warning-face
+                                         'font-lock-doc-face)))
+               "] "
+
+               ;; The percentage of the buffer above the top of the window.
+               '(:eval (propertize "%p" 'face 'font-lock-constant-face))
+               "/"
+
+               ;; The current buffer size.
+               '(:eval (propertize "%I" 'face 'font-lock-constant-face))
+               " "
+               ;; Add the default mode line
+               mode-line-end-spaces))
 
 (require 'init-user nil t)

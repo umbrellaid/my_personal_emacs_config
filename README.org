@@ -34,9 +34,16 @@ with small tweaks to fit my needs and preferences.
 ** Random Notes
 
 - I start with Wakib keys disabled and then I enable with F12 and disable with F11
+- The mode-line says W-OFF if the mode is disabled/off and W-ON if the mode is enabled/on
 - I like switching between vanilla emacs and Wakib keys depending on what I am doing
 - Keep in mind that C-x is rebound in Wakib keys mode to C-e and C-c is rebound to C-d
 - when Wakib keys is off you use C-x and C-c as normal
+- Reminder this is for Prefix Keys Only - only changed for the start of commands that start with C-x or C-c
+- Table of this behavior:
+| Vanilla Emacs | Wakib keys |
+|---------------+------------|
+| Ctrl + c      | Ctrl + d   |
+| Ctrl + x      | Ctrl + e   |
 - this is only for the initial prefix any key combos after the initial prefix are the same as vanilla Emacs
 - the author of Wakib keys has another package if you wanted the C-x and C-c to always be rebound the way it is when Wakib keys is on but I prefer switching back and forth
 - copy and pasting: if you enable wakib keys then copy, cut paste work like most apps with C-c / C-x / C-v
