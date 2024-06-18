@@ -1,5 +1,3 @@
-;; -*- lexical-binding: t -*-
-
 ;;----------------------------------------------------------------------------
 ;; Adjust garbage collection
 ;;----------------------------------------------------------------------------
@@ -20,15 +18,9 @@
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-;; Fix tls bug
-(when (< (string-to-number emacs-version) 26.3)
-  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+  )
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
@@ -40,86 +32,13 @@
 (use-package diminish)
 
 ;; -------------------
-;; Wakib
-;; -------------------
-(use-package wakib-keys
-  :diminish wakib-keys
-  :config
-  (add-hook 'after-change-major-mode-hook 'wakib-update-major-mode-map)
-  (add-hook 'menu-bar-update-hook 'wakib-update-minor-mode-maps)
-  ;; Modifying other modules
-  ;; When remap is used it exits isearch abruptly after first instance
-  ;; Use explicit keybindings instead
-  (define-key isearch-mode-map (kbd "C-f") 'isearch-repeat-forward)
-  (define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
-  (define-key isearch-mode-map (kbd "M-;") 'isearch-repeat-forward)
-  (define-key isearch-mode-map (kbd "M-:") 'isearch-repeat-backward)
-  (define-key isearch-mode-map (kbd "C-v") 'isearch-yank-kill)
-  (define-key isearch-mode-map (kbd "M-d") 'isearch-delete-char))
-
-;; -------------------
 ;; Initial Setup
 ;; -------------------
 (tool-bar-mode -1)
 (unless (display-graphic-p)
   (menu-bar-mode -1))
 
-(cua-selection-mode 1)
-(define-key cua-global-keymap (kbd "<C-return>") nil)
-;;(define-key cua--rectangle-keymap (kbd "ESC") nil)
-;;(define-key cua-global-keymap (kbd "<C-return>") nil)
-;;(define-key cua-global-keymap (kbd "C-x SPC") 'cua-rectangle-mark-mode)
-
-(define-key read-expression-map [remap previous-line] 'previous-line-or-history-element)
-(define-key read-expression-map [remap next-line] 'next-line-or-history-element)
-
-(setq org-export-with-toc nil)
-(setq org-support-shift-select t)
 (setq frame-title-format '((:eval (buffer-name))" [%+] Emacs"))
-
-;; Menu Bars
-;; TODO - Change bind-key to define-key
-(bind-key [menu-bar file new-file]
-	  `(menu-item "New File..." wakib-new-empty-buffer :enable (menu-bar-non-minibuffer-window-p)
-		      :help "Create a new blank buffer"
-		      :key-sequence ,(kbd "C-n")))
-
-(bind-key [menu-bar file open-file]
-	  `(menu-item "Open File..." find-file :enable (menu-bar-non-minibuffer-window-p)
-		      :help "Read an existing or new file from disk"
-		      :key-sequence ,(kbd "C-o")))
-
-(bind-key [menu-bar file dired]
-	  `(menu-item "Open Directory..." dired :enable (menu-bar-non-minibuffer-window-p)
-		      :help "Browse a directory, to operate on its files"
-		      :keys "C-e d"))
-
-(bind-key [menu-bar file insert-file]
-	  `(menu-item "Insert File..." insert-file :enable (menu-bar-non-minibuffer-window-p)
-		      :help "Insert another file into current buffer"
-		      :keys "C-e i"))
-
-(global-unset-key [menu-bar options cua-mode])
-
-;; Disable backup and lockfile
-;; I hate browsing directories and seeing 'Emacs was Here' everywhere
-;; (setq create-lockfiles nil
-;;       make-backup-files nil)
-
-;; -------------------
-;; Theme
-;; -------------------
-;; (use-package moe-theme
-;;   :config
-;;   (load-theme 'moe-dark t)
-;;   ;; diff-hl
-;;   (custom-theme-set-faces
-;;    'moe-dark
-;;    '(diff-hl-insert ((t (:background "#008700" :foreground "#a1db00"))))
-;;    '(diff-hl-change ((t (:background "#005f87" :foreground "#1f5bff"))))
-;;    '(diff-hl-delete ((t (:background "#a40000" :foreground "#ef2929"))))
-;;    '(flyspell-duplicate ((t (:underline (:color "#ff0000" :style wave)))))
-;;    '(flyspell-incorrect ((t (:underline (:color "#ff0000" :style wave)))))))
 
 ;; -------------------
 ;; Undo-tree
@@ -134,149 +53,68 @@
   (define-key undo-tree-visualizer-mode-map [remap right-char] 'undo-tree-visualize-switch-branch-right)
   (setq undo-tree-auto-save-history nil)
   :bind
-  (("C-S-z" . undo-tree-redo)))
+  )
 
-;; -------------------
-;; Magit
-;; -------------------
-(use-package magit
-  :bind
-  (("C-x g" . magit-status )))
+(use-package goto-chg)
 
-(use-package exec-path-from-shell
-  :disabled
+(use-package evil
+  :ensure t
   :config
-  (exec-path-from-shell-copy-env "SSH_AGENT_PID")
-  (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
+  (evil-mode 1)
+  )
 
-;; -------------------
-;; Ivy
-;; -------------------
-(use-package ivy
-  :diminish ivy-mode
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (define-key ivy-minibuffer-map [remap keyboard-quit] 'minibuffer-keyboard-quit)
-  ;;  (setq enable-recursive-minibuffers t)
-  (setq ivy-count-format "")
-  (setq ivy-initial-inputs-alist nil))
+(global-hl-line-mode t) ;; This highlights the current line in the buffer
 
-(use-package counsel
-  :diminish counsel-mode
-  :config
-  (counsel-mode 1)
-  (define-key wakib-keys-overriding-map (kbd "C-S-v") 'counsel-yank-pop))
+;; (use-package beacon ;; This applies a beacon effect to the highlighted line
+;;   :ensure t
+;;   :config
+;;   (beacon-mode 1))
 
-;; find out what ivy uses from smex
-(use-package smex)
-
-;; -------------------
-;; Flyspell-correct
-;; -------------------
-(use-package flyspell-correct-popup
-  :config
-  (define-key popup-menu-keymap (kbd "M-;") 'popup-next)
-  (define-key popup-menu-keymap (kbd "M-:") 'popup-previous)
-  (define-key popup-menu-keymap (kbd "M-k") 'popup-next)
-  (define-key popup-menu-keymap (kbd "M-i") 'popup-previous)
-  (define-key flyspell-mouse-map [mouse-2] nil)
-  (define-key flyspell-mouse-map [mouse-3] 'flyspell-correct-word)
-  (defun wakib-next-more (&optional arg)
-    "Correct previous word"
-    (interactive "p")
-    (cond ((and flyspell-mode
-		(or (wakib-find-overlays-specifying 'flyspell-overlay)
-		    (save-excursion
-		      (backward-word)
-		      (wakib-find-overlays-specifying 'flyspell-overlay))))
-	   (flyspell-correct-wrapper))))
-  :init
-  (setq flyspell-correct-interface #'flyspell-correct-popup))
-
-;; -------------------
-;; Projectile
-;; -------------------
-;; No deferred loading as bind-keymap
-;; doesn't handle wakib C-d keymaps
-(use-package projectile
-  :diminish projectile-mode
-  :config
-  (setq projectile-completion-system 'ivy)
-  (define-key projectile-mode-map (kbd "C-c p") nil)
-  (define-key projectile-mode-map (kbd "C-x p") 'projectile-command-map)
-  (projectile-mode 1)
-  (wakib-update-menu-map (global-key-binding [menu-bar tools Projectile])
-			 projectile-command-map "C-e p")
-  (define-key wakib-keys-map [menu-bar project]
-	      `(menu-item ,"Project" ,(global-key-binding [menu-bar tools Projectile])
-			  :visible (projectile-project-p)))
-  (define-key wakib-keys-map [menu-bar project seperator1] `(menu-item ,"--" nil))
-  (define-key wakib-keys-map [menu-bar project git] `(menu-item ,"Git ..." magit-status :keys "C-e g"))
-  (global-unset-key [menu-bar tools Projectile]))
-
-;; -------------------
-;; Yasnippet
-;; -------------------
-
-(use-package yasnippet-snippets
-  :defer t)
-
-(use-package yasnippet
-  :hook
-  ((prog-mode . yas-minor-mode))
-  :diminish yas-minor-mode
-  :config
-  (require 'yasnippet-snippets)
-  (yas-reload-all)
-  (define-key yas-keymap [remap wakib-next] 'yas-next-field)
-  (define-key yas-keymap [remap wakib-previous] 'yas-prev-field))
-
-(use-package ivy-yasnippet
-  :bind ("C-y" . ivy-yasnippet))
-
-;; -------------------
-;; Company
-;; -------------------
-(use-package company
-  :diminish company-mode
-  :config
-  (global-company-mode 1)
-  (define-key company-active-map [remap wakib-next] 'company-select-next)
-  (define-key company-active-map [remap wakib-previous] 'company-select-previous)
-  (define-key company-active-map (kbd "<tab>") 'company-complete)
-  (define-key company-active-map (kbd "<return>") nil)
-  (define-key company-active-map (kbd "RET") nil))
+(global-display-line-numbers-mode)
+(setq display-line-numbers-type 'relative)
 
 ;; -------------------
 ;; expand-region
 ;; -------------------
 (use-package expand-region
-  :bind ("M-A" . er/expand-region))
+  )
 
 ;; -------------------
 ;; avy
 ;; -------------------
 (use-package avy
-  :bind ("M-m" . avy-goto-char))
-
-;; -------------------
-;; switch-window
-;; -------------------
-(use-package switch-window
-  :bind ("M-H" . switch-window)
-  :config
-  (setq switch-window-shortcut-style 'qwerty)
-  (setq switch-window-threshold 1))
+  )
 
 ;; -------------------
 ;; which-key
 ;; -------------------
 (use-package which-key
-  :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.1)
-  (which-key-mode))
+  (setq which-key-idle-delay 0.3)
+  (setq which-key-popup-type 'frame)
+  (which-key-mode)
+  (which-key-setup-minibuffer)
+  (set-face-attribute 'which-key-local-map-description-face nil
+		      :weight 'bold)
+  :ensure t)
+
+(use-package helm
+  :init
+  (setq helm-split-window-in-side-p t
+        helm-move-to-line-cycle-in-source t)
+  :config
+  (helm-mode 1) ;; Most of Emacs prompts become helm-enabled
+  (helm-autoresize-mode 1) ;; Helm resizes according to the number of candidates
+  (global-set-key (kbd "C-x b") 'helm-buffers-list) ;; List buffers ( Emacs way )
+  (define-key evil-ex-map "b" 'helm-buffers-list) ;; List buffers ( Vim way )
+  (global-set-key (kbd "C-x r b") 'helm-bookmarks) ;; Bookmarks menu
+  (global-set-key (kbd "C-x C-f") 'helm-find-files) ;; Finding files with Helm
+  (global-set-key (kbd "M-c") 'helm-calcul-expression) ;; Use Helm for calculations
+  (global-set-key (kbd "C-s") 'helm-occur)  ;; Replaces the default isearch keybinding
+  (global-set-key (kbd "C-h a") 'helm-apropos)  ;; Helmized apropos interface
+  (global-set-key (kbd "M-x") 'helm-M-x)  ;; Improved M-x menu
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring)  ;; Show kill ring, pick something to paste
+  :ensure t)
 
 ;; -------------------
 ;; multiple-cursors
@@ -286,153 +124,482 @@
   :init
   (custom-set-variables `(mc/always-run-for-all ,t))
   :config
-  (define-key mc/keymap [remap keyboard-quit] 'mc/keyboard-quit)
-  (define-key rectangular-region-mode-map [remap keyboard-quit] 'rrm/keyboard-quit)
-  ;;(custom-set-variables `(mc/always-run-for-all ,t))
   :bind
-  (("M-S" . set-rectangular-region-anchor)
-   :map wakib-keys-overriding-map
-   ("C-." . mc/mark-next-like-this)
-   ("C-," . mc/mark-previous-like-this)
-   ("<C-down-mouse-1>" . mc/add-cursor-on-click)))
-
-;; -------------------
-;; diff-hl
-;; -------------------
-(use-package diff-hl
-  :hook
-  ((prog-mode . turn-on-diff-hl-mode)
-   (magit-post-refresh-hook . diff-hl-magit-post-refresh)))
-
-;; TODO (change defun rewrite to advice)
-(use-package quickrun
-  :init
-  (global-set-key [menu-bar tools quickrun] `(menu-item ,"Run Buffer" quickrun))
-  :config
-  (setq quickrun-focus-p nil)
-  ;; Move cursor out of the way when displaying output
-  (advice-add 'quickrun--recenter
-	      :after (lambda (&optional _)
-		       (with-selected-window
-			   (get-buffer-window quickrun--buffer-name)
-			 (end-of-buffer))))
-  :bind
-  (([f8] . quickrun )))
-
-;; Better Parenthesis
-;; (use-package rainbow-delimiters
-;;   :hook (prog-mode . rainbow-delimiters-mode))
-;; (show-paren-mode 1)
-
-;; MAJOR MODES
-
-;; (use-package markdown-mode
-;;   :mode "\\.\\(m\\(ark\\)?down\\|md\\)$")
-
-;; (use-package csharp-mode
-;;   :mode ("\\.cs\\'" . csharp-mode)
-;;   :interpreter ("csharp" . csharp-mode))
-
-;; (use-package js2-mode
-;;   :mode "\\.js\\'")
-
-;; (use-package crystal-mode
-;;   :mode "\\.cr\\'")
-
-;; (use-package yaml-mode
-;;   :mode "\\.yml\\'")
-
-;; (use-package haml-mode
-;;   :mode "\\.haml\\'")
+  )
 
 ;; Setup Splash Screen
 (setq inhibit-startup-screen t)
 (setq-default major-mode 'org-mode)
 (setq-default initial-scratch-message ";; Emacs lisp scratch buffer.\n\n")
 
-;; Start with a blank buffer unless Emacs was started with a file to open.
-;; Otherwise causes split window when opening file from command line or GUI.
-;; (unless (< 1 (length command-line-args)) (setq initial-buffer-choice (lambda (&optional _)
-;; 			      (let ((buf (generate-new-buffer "untitled")))
-;; 				(set-buffer-major-mode buf)
-;; 				(message "New Buffer Started")
-;; 				(message (number-to-string (length command-line-args)))
-;; 				buf))))
-
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (if (file-exists-p custom-file)
     (load custom-file))
 
-;; Load custom user configurations
-(load "~/.emacs.d/init-user.el" t t)
+;; Place all local configuration options here
 
-(defvar wakib-keys-status "W-OFF"
-  "Current status of wakib-keys mode.")
-
-(defun wakib-keys-custom (state)
-  (interactive)
-  (setq wakib-keys-status (if (= state 1) "W-ON" "W-OFF"))
-  ;; Toggle the wakib-keys minor mode
-  (if (= state 1)
-      (progn
-        ;; Enable wakib-keys
-	(wakib-keys 1)
-        (message "Wakib keys enabled"))
+(if (equal window-system 'w32)
+    ;; All the following code will be executed ONLY if window-system is 'w32
     (progn
-      ;; Disable wakib-keys
-      (wakib-keys 0)
-      (message "Wakib keys disabled")))
-  (force-mode-line-update))
+      (setenv "HOME" "C:\\Users\\recordr\\AppData\\Roaming\\")
+      (setenv "PATH" (concat (getenv "PATH") ":C:/ProgramData/chocoportable/bin"))
+      (setq exec-path (append exec-path '("C:/ProgramData/chocoportable/bin")))
+      ;; The rest are wrapped into progn to allow after-load to function
+      (progn
+        (with-eval-after-load "ispell"
+          (add-to-list 'ispell-hunspell-dict-paths-alist '("en_US" "C:/Hunspell/en_US.aff")))
+        (global-unset-key (kbd "<scroll>"))
+        (global-set-key (kbd "<scroll>") 'ignore)
+        (setq w32-scroll-lock-modifier nil)
+        (setq ispell-program-name "hunspell")
+        (setenv "LANG" "en_US")
+        (setq ispell-dictionary "en_US")
+        )
+      ) ;; End of the progn
+  ;; Code for when window-system is 'x (or anything other than 'w32)
+  ;; Add what should be executed only when under X windows
+  (if (equal window-system 'x)
+      (progn
+        ;; Your X11-specific configurations here
+        ))
+  ) ;; End of the main if
 
-(defun toggle-wakib-keys-0 ()
+(use-package emacs
+  :init
+  (setq confirm-kill-processes nil)             ; Stop confirming the killing of processes
+  (setq use-short-answers t)                      ; y-or-n-p makes answering questions faster
+  (setq read-process-output-max (* 1024 1024))    ; Increase the amount of data which Emacs reads from the process
+  (setq gc-cons-threshold 100000000)
+  (setq lsp-idle-delay 0.500)
+  )
+
+(setq sentence-end-double-space nil)
+
+;; In an emacs lisp scratch buffer you can run this code to double
+;; check value of variable:
+;; (message "Current fill-column value: %d" fill-column)
+;; M-x display-fill-column-indicator-mode
+;; to show vertical line at the fill-column
+;; highlight text and press ALT-q to fill text to that width
+(setq-default fill-column 80)
+
+;; Default to y/n instead of yes/no
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(setq visible-bell t)
+
+(blink-cursor-mode 0)
+
+(recentf-mode 1)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(toggle-frame-maximized)
+
+(when (equal window-system 'x)
+  (setq python-shell-interpreter "/usr/bin/python3.12"))
+
+;; Automatically create closing parenthesis/quote
+(electric-pair-mode 1)
+
+(use-package org
+  )
+
+;; Enable Visual Line Mode to wrap at fill column
+(use-package visual-fill-column
+  :config
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
+
+(use-package spacious-padding
+  :config
+  ;; (require 'spacious-padding)
+
+  ;; These is the default value, but I keep it here for visibility.
+  (setq spacious-padding-widths
+        '( :internal-border-width 15
+           :header-line-width 4
+           :mode-line-width 6
+           :tab-width 4
+           :right-divider-width 30
+           :scroll-bar-width 8
+           :fringe-width 8))
+
+  ;; Read the doc string of `spacious-padding-subtle-mode-line' as it
+  ;; is very flexible and provides several examples.
+  (setq spacious-padding-subtle-mode-line
+        `( :mode-line-active 'default
+           :mode-line-inactive vertical-border))
+
+  (spacious-padding-mode 1)
+
+  ;; Set a key binding if you need to toggle spacious padding.
+  ;; (define-key global-map (kbd "<f8>") #'spacious-padding-mode)
+  )
+
+;;; For packaged versions which must use `require'.
+(use-package modus-themes
+  :config
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+        )
+
+  ;; Maybe define some palette overrides, such as by using our presets
+  (setq modus-themes-common-palette-overrides
+        modus-themes-preset-overrides-intense)
+
+  (modus-themes-with-colors
+    (custom-set-faces
+     `(fill-column-indicator ((,c :height 1.0 :background ,bg-inactive :foreground ,bg-inactive)))))
+
+  ;; Load the theme of your choice.
+  (load-theme 'modus-operandi)
+
+  )
+
+(use-package fontaine
+  :config
+  (require 'fontaine)
+
+  (setq fontaine-latest-state-file
+        (locate-user-emacs-file "fontaine-latest-state.eld"))
+
+  ;; Iosevka Comfy is my highly customised build of Iosevka with
+  ;; monospaced and duospaced (quasi-proportional) variants as well as
+  ;; support or no support for ligatures:
+  ;; <https://github.com/protesilaos/iosevka-comfy>.
+  (setq fontaine-presets
+        '((small
+           :default-family "Liberation Mono"
+           :default-height 115
+           :variable-pitch-family "Liberation Sans")
+          (regular) ; like this it uses all the fallback values and is named `regular'
+          (medium
+           :default-weight semilight
+           :default-height 150
+           :bold-weight extrabold)
+          (large
+           :inherit medium
+           :default-height 180)
+          (presentation
+           :default-height 240)
+          (t
+           ;; I keep all properties for didactic purposes, but most can be
+           ;; omitted.  See the fontaine manual for the technicalities:
+           ;; <https://protesilaos.com/emacs/fontaine>.
+           :default-family "Liberation Mono"
+           :default-weight regular
+           :default-height 150
+
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+
+           :fixed-pitch-serif-family nil ; falls back to :default-family
+           :fixed-pitch-serif-weight nil ; falls back to :default-weight
+           :fixed-pitch-serif-height 1.0
+
+           :variable-pitch-family "Liberation Sans"
+           :variable-pitch-weight nil
+           :variable-pitch-height 1.0
+
+           :mode-line-active-family nil ; falls back to :default-family
+           :mode-line-active-weight nil ; falls back to :default-weight
+           :mode-line-active-height 0.9
+
+           :mode-line-inactive-family nil ; falls back to :default-family
+           :mode-line-inactive-weight nil ; falls back to :default-weight
+           :mode-line-inactive-height 0.9
+
+           :header-line-family nil ; falls back to :default-family
+           :header-line-weight nil ; falls back to :default-weight
+           :header-line-height 0.9
+
+           :line-number-family nil ; falls back to :default-family
+           :line-number-weight nil ; falls back to :default-weight
+           :line-number-height 0.9
+
+           :tab-bar-family nil ; falls back to :default-family
+           :tab-bar-weight nil ; falls back to :default-weight
+           :tab-bar-height 1.0
+
+           :tab-line-family nil ; falls back to :default-family
+           :tab-line-weight nil ; falls back to :default-weight
+           :tab-line-height 1.0
+
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+
+           :italic-family nil
+           :italic-slant italic
+
+           :line-spacing nil)))
+
+  ;; Set the last preset or fall back to desired style from `fontaine-presets'
+  ;; (the `regular' in this case).
+  (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
+
+  ;; Persist the latest font preset when closing/starting Emacs and
+  ;; while switching between themes.
+  (fontaine-mode 1)
+
+  ;; fontaine does not define any key bindings.  This is just a sample that
+  ;; respects the key binding conventions.  Evaluate:
+  ;;
+  ;;     (info "(elisp) Key Binding Conventions")
+  )
+
+(if (equal window-system 'x)
+    (progn
+      (use-package greader
+        :config
+        (setq greader-espeak-rate 300))
+      (use-package elfeed
+        :config
+        (setq elfeed-feeds
+              '(("http://nullprogram.com/feed/" emacs)
+                ("https://planet.emacslife.com/atom.xml" emacs)
+                ("https://www.reddit.com/r/emacs.rss" emacs)
+                ("https://protesilaos.com/master.xml" emacs)
+                ("https://sachachua.com/blog/feed" emacs)
+                ("https://www.reddit.com/r/orgmode.rss" emacs)
+                ("https://karthinks.com/index.xml" emacs)
+                ("https://draculatheme.com/rss.xml" theme)
+                ("https://dotfyle.com/this-week-in-neovim/rss.xml" )
+                ("https://neovim.io/news.xml" )
+                )
+              )
+        )
+      )
+  )
+
+;; (use-package treemacs
+;;   :hook (after-init . treemacs)
+;;   :bind
+;;   :config
+;;   )
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") 'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
+          treemacs-deferred-git-apply-delay   0.5
+          treemacs-display-in-side-window     t
+          treemacs-file-event-delay           5000
+          treemacs-file-follow-delay          0.2
+          treemacs-follow-after-init          t
+          treemacs-follow-recenter-distance   0.1
+          treemacs-git-command-pipe           ""
+          treemacs-goto-tag-strategy          'refetch-index
+          treemacs-indentation                2
+          treemacs-indentation-string         " "
+          treemacs-is-never-other-window      nil
+          treemacs-max-git-entries            5000
+          treemacs-no-png-images              nil
+          treemacs-no-delete-other-windows    t
+          treemacs-project-follow-cleanup     nil
+          treemacs-persist-file               (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-recenter-after-file-follow nil
+          treemacs-recenter-after-tag-follow  nil
+          treemacs-show-cursor                nil
+          treemacs-show-hidden-files          nil
+          treemacs-silent-filewatch           nil
+          treemacs-silent-refresh             nil
+          treemacs-sorting                    'alphabetic-desc
+          treemacs-space-between-root-nodes   t
+          treemacs-tag-follow-cleanup         t
+          treemacs-tag-follow-delay           1.5
+          treemacs-width                      35)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (executable-find "python3"))))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after treemacs evil
+  :ensure t)
+
+(use-package evil-surround
+  :after evil
+  :ensure t)
+
+(use-package evil-numbers
+  :after evil
+  :ensure t)
+
+(use-package evil-nerd-commenter
+  :after evil
+  :ensure t)
+
+(use-package evil-visualstar
+  :after evil
+  :ensure t)
+
+(use-package sentence-navigation
+  :after evil
+  :ensure t
+  :config
+  (define-key evil-motion-state-map ")" 'sentence-nav-evil-forward)
+  (define-key evil-motion-state-map "(" 'sentence-nav-evil-backward)
+  (define-key evil-motion-state-map "g)" 'sentence-nav-evil-forward-end)
+  (define-key evil-motion-state-map "g(" 'sentence-nav-evil-backward-end)
+  ;; (define-key evil-outer-text-objects-map "s" 'sentence-nav-evil-a-sentence)
+  ;; (define-key evil-inner-text-objects-map "s" 'sentence-nav-evil-inner-sentence)
+  )
+
+(use-package evil-escape
+  :after evil
+  :config
+  (evil-escape-mode)
+  (setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-delay 0.2)
+  (global-set-key (kbd "C-c C-g") 'evil-escape)
+  :ensure t)
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package toc-org
+  )
+(add-hook 'org-mode-hook 'toc-org-mode)
+
+(define-key dired-mode-map (kbd "E")
+            (defun open-window-manager ()
+              "Open default system windows manager in current directory"
+              (interactive)
+              (save-window-excursion
+                (if (equal window-system 'w32)
+                    (async-shell-command "explorer .")
+                  (if (equal window-system 'x)
+                      (async-shell-command "thunar ."))))))
+
+(require 'flyspell)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+(if (equal window-system 'w32)
+    (defcustom ispell-common-dictionaries '("en_US") "List of dictionaries for common use" :group 'ispell)
+  (defcustom ispell-common-dictionaries '("en_US") "List of dictionaries for common use" :group 'ispell))
+
+(setq-default ispell-dictionary (car ispell-common-dictionaries))
+
+(define-key flyspell-mode-map (kbd "C-x M-$")
+            (defun flyspell-buffer-or-region ()
+              (interactive)
+              (if (region-active-p)
+                  (flyspell-region (region-beginning) (region-end))
+                (flyspell-buffer))))
+
+(require 'ibuffer nil t)
+;; ibuffer groups
+(setq-default ibuffer-saved-filter-groups
+              (quote (("default"
+                       ("org"  (mode . org-mode))
+                       ("dired" (mode . dired-mode))
+                       ("D" (mode . d-mode))
+                       ("C/C++" (or
+                                 (mode . cc-mode)
+                                 (mode . c-mode)
+                                 (mode . c++-mode)))
+                       ("Markdown" (mode . markdown-mode))
+                       ("emacs" (name . "^\\*Messages\\*$"))
+                       ("shell commands" (name . "^\\*.*Shell Command\\*"))))))
+(add-hook 'ibuffer-mode-hook
+          (lambda ()
+            (ibuffer-switch-to-saved-filter-groups "default")))
+
+(use-package olivetti
+  )
+
+(when (equal window-system 'x)
+  (use-package notmuch))
+
+(use-package casual-info
+  :ensure t
+  :bind (:map Info-mode-map ("C-o" . 'casual-info-tmenu)))
+
+(use-package casual-dired
+  :ensure t
+  :bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
+
+(use-package casual-avy
+  :ensure t
+  :bind ("M-g" . casual-avy-tmenu))
+
+(use-package casual-calc
+  :ensure t
+  :bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
+
+(use-package casual-isearch
+  :ensure t
+  :bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
+
+(defun drr-insert-date-stamp-prefix ()
+  "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."
   (interactive)
-  (wakib-keys-custom 0))
+  (insert (format-time-string "Date: %m-%d-%Y")))
 
-(defun toggle-wakib-keys-1 ()
+(defun drr-insert-date-stamp ()
+  "Inserts the current date in mm-dd-yyyy format"
   (interactive)
-  (wakib-keys-custom 1))
+  (insert (format-time-string "%m-%d-%Y")))
 
-;; Unbind F11 from its current function (toggle-frame-fullscreen)
-(global-unset-key [f11])
+(defun drr-locate-current-file-in-explorer ()
+  (interactive)
+  (cond
+   ;; In buffers with file name
+   ((buffer-file-name)
+    (shell-command (concat "start explorer /e,/select,\"" (replace-regexp-in-string "/" "\\\\" (buffer-file-name)) "\"")))
+   ;; In dired mode
+   ((eq major-mode 'dired-mode)
+    (shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (dired-current-directory)) "\"")))
+   ;; In eshell mode
+   ((eq major-mode 'eshell-mode)
+    (shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" (eshell/pwd)) "\"")))
+   ;; Use default-directory as last resource
+   (t
+    (shell-command (concat "start explorer /e,\"" (replace-regexp-in-string "/" "\\\\" default-directory) "\"")))))
 
-;; Bind F11 to toggle-wakib-keys-0
-(global-set-key [f11] 'toggle-wakib-keys-0)
+(defun drr-my-reindent-file ()
+  "Reindent the entire file and return to the original cursor position."
+  (interactive)
+  (let ((original-line (line-number-at-pos))
+        (original-column (current-column)))
+    (goto-char (point-min)) ; Move to the beginning of the file
+    (mark-whole-buffer)    ; Select all lines
+    (indent-region (point-min) (point-max)) ; Reindent the entire buffer (equivalent to C-M-\)
+    (goto-line original-line) ; Return to the original line
+    (move-to-column original-column nil) ; Return to the original column
+    ))
 
-;; Bind F12 to toggle-wakib-keys-1
-(global-set-key [f12] 'toggle-wakib-keys-1)
+(defun drr-condense-blank-lines ()
+  "Condense multiple blank lines into a single blank line in the entire buffer."
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward "\n\n+" nil t)
+    (replace-match "\n\n")))
 
-(setq-default mode-line-format
-              (list
-               ;; The current buffer name.
-               '(:eval (propertize "%b " 'face 'font-lock-keyword-face
-                                   'help-echo (buffer-file-name)))
-
-               ;; The current line and column numbers.
-               " (" '(:eval (propertize "%l" 'face 'font-lock-type-face))
-               ","
-               '(:eval (propertize "%c" 'face 'font-lock-type-face))
-               ") "
-
-               ;; The current major mode.
-               "[" '(:eval (propertize "%m" 'face 'font-lock-string-face
-                                       'help-echo buffer-file-coding-system))
-               "] "
-
-               ;; The current wakib-keys status.
-               "[" '(:eval (propertize wakib-keys-status 'face
-                                       (if (string= wakib-keys-status "W-ON")
-                                           'font-lock-warning-face
-                                         'font-lock-doc-face)))
-               "] "
-
-               ;; The percentage of the buffer above the top of the window.
-               '(:eval (propertize "%p" 'face 'font-lock-constant-face))
-               "/"
-
-               ;; The current buffer size.
-               '(:eval (propertize "%I" 'face 'font-lock-constant-face))
-               " "
-               ;; Add the default mode line
-               mode-line-end-spaces))
-
-(require 'init-user nil t)
+(repeat-mode 1)

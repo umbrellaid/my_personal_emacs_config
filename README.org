@@ -2,9 +2,13 @@
   - [[#introduction][Introduction]]
   - [[#links-to-resources][Links To Resources]]
   - [[#random-notes][Random Notes]]
-  - [[#wakib-table-of-shortcuts][Wakib Table Of Shortcuts]]
+  - [[#contact-me][Contact Me]]
 
 ** Introduction
+
+To create this customized configuration I am using existing the items noted
+below. This is just me taking other people's work and blending them together
+with small tweaks to fit my needs and preferences.
 
 To make understanding emacs easier, I am not using distributions
 anymore, but I will leave my minor notes on doom on my other GitHub
@@ -16,10 +20,6 @@ spacemacs coming in as a close second. They both are really excellent
 and they are a great tool for many people. I still recommend them if
 you want a distribution.
 
-To create this customized configuration I am using existing the items noted
-below. This is just me taking other people's work and blending them together
-with small tweaks to fit my needs and preferences.
-
 ** Links To Resources
 
 - [[https://github.com/kickingvegas/casual-suite][Casual Suite - Casual porcelains (Casual Calc/Dired/Avy/Info/Isearch)]]
@@ -27,145 +27,38 @@ with small tweaks to fit my needs and preferences.
 - [[https://github.com/susam/emfy][Emacs for You (Emfy)]]
 - [[https://github.com/james-stoup/emacs-org-mode-tutorial][Emacs-Org-Mode-Tutorial]]
 - [[https://github.com/james-stoup/org-mode-better-defaults/tree/main][Org-Mode-Better-Defaults]]
-- [[https://github.com/darkstego/wakib-emacs][Wakib: Emacs for the rest of us]]
-- [[https://github.com/darkstego/wakib-project][Wakib Keybindings Project]]
-- [[https://github.com/darkstego/wakib-keys][Wakib Keys]]
+- [[https://github.com/darkstego/wakib-emacs][Wakib: Emacs for the rest of us]] (I stopped using the keybindings, but the Emacs configuration is very helpful.)
 
 ** Random Notes
 
-- I start with Wakib keys disabled and then I enable with F12 and disable with F11
-- The mode-line says W-OFF if the mode is disabled/off and W-ON if the mode is enabled/on
-- I like switching between vanilla emacs and Wakib keys depending on what I am doing
-- Keep in mind that C-x is rebound in Wakib keys mode to C-e and C-c is rebound to C-d
-- when Wakib keys is off you use C-x and C-c as normal
-- Reminder this is for Prefix Keys Only - only changed for the start of commands that start with C-x or C-c
-- Table of this behavior:
-| Vanilla Emacs | Wakib keys |
-|---------------+------------|
-| Ctrl + c      | Ctrl + d   |
-| Ctrl + x      | Ctrl + e   |
-- this is only for the initial prefix any key combos after the initial prefix are the same as vanilla Emacs
-- the author of Wakib keys has another package if you wanted the C-x and C-c to always be rebound the way it is when Wakib keys is on but I prefer switching back and forth
-- copy and pasting: if you enable wakib keys then copy, cut paste work like most apps with C-c / C-x / C-v
-- with wakib keys disabled then you have a mix of Emacs defaults but with some changes
-- to copy is M-w to cut is C-w and
-- to paste either SHIFT + INSERT Key (INS) or M-y and select item from the kill ring (This is because C-y that you would normally use is rebound even if Wakib keys is turned off)
-- (define-key calc-mode-map (kbd "C-o") #'casual-calc-tmenu)
-- (define-key dired-mode-map (kbd "C-o") #'casual-dired-tmenu)
-- (define-key info-mode-map (kbd "C-o") #'casual-info-tmenu)
-- (keymap-global-set "M-g" #'casual-avy-tmenu)
-- (define-key isearch-mode-map (kbd "<f2>") #'cc-isearch-menu-transient)
-- C-x (Wakib: C-e) C-b - ibuffer
-- C-x (Wakib: C-e) M-4 - turn on flyspell for buffer or selection
-- in dired use E to launch in explorer / dolphin
+- C-x M-$ - turn on flyspell for buffer or selection
+- in dired use capital E to launch in explorer / dolphin
 - press pause key to re-indent file using emacs smarts
-- ("M-0"       . treemacs-select-window)
-- ("C-x (Wakib: C-e) t t"   . treemacs)
-- ("C-x (Wakib: C-e) t C-t" . treemacs-find-file)
-- ("C-x (Wakib: C-e) t M-t" . treemacs-find-tag)
-- (define-key global-map (kbd "C-c (Wakib: C-d) f") #'fontaine-set-preset)
-- (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 - ;; In an emacs lisp scratch buffer you can run this code to double
 - ;; check value of variable:
 - ;; (message "Current fill-column value: %d" fill-column)
 - ;; M-x display-fill-column-indicator-mode
 - ;; to show vertical line at the fill-column
 - ;; highlight text and press ALT-q to fill text to that width
-- [[https://github.com/darkstego/wakib-emacs?tab=readme-ov-file#bindings][Wakib Emacs jump to key bindings section of read me]]
-- (define-key isearch-mode-map (kbd "C-f") 'isearch-repeat-forward)
-- (define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
-- (define-key isearch-mode-map (kbd "M-;") 'isearch-repeat-forward)
-- (define-key isearch-mode-map (kbd "M-:") 'isearch-repeat-backward)
-- (define-key isearch-mode-map (kbd "C-v") 'isearch-yank-kill)
-- (define-key isearch-mode-map (kbd "M-d") 'isearch-delete-char)
-- (("C-S-z" . undo-tree-redo))
-- (("C-x (Wakib: C-e) g" . magit-status ))
-- (define-key wakib-keys-overriding-map (kbd "C-S-v") 'counsel-yank-pop)
-- (use-package flyspell-correct-popup
-- :config
-- (define-key popup-menu-keymap (kbd "M-;") 'popup-next)
-- (define-key popup-menu-keymap (kbd "M-:") 'popup-previous)
-- (define-key popup-menu-keymap (kbd "M-k") 'popup-next)
-- (define-key popup-menu-keymap (kbd "M-i") 'popup-previous)
-- projectile-command-map "C-e p")
-- (define-key wakib-keys-map [menu-bar project git] `(menu-item ,"Git ..." magit-status :keys "C-e g"))
-- :bind ("C-y" . ivy-yasnippet)
-- (define-key company-active-map (kbd "<tab>") 'company-complete)
-- (define-key company-active-map (kbd "<return>") nil)
-- (define-key company-active-map (kbd "RET") nil)
-- :bind ("M-A" . er/expand-region)
-- :bind ("M-m" . avy-goto-char)
-- :bind ("M-H" . switch-window)
-- ("M-S" . set-rectangular-region-anchor)
-- :map wakib-keys-overriding-map
-- ("C-." . mc/mark-next-like-this)
-- ("C-," . mc/mark-previous-like-this)
-- ("<C-down-mouse-1>" . mc/add-cursor-on-click)
+(use-package casual-info
+:ensure t
+:bind (:map Info-mode-map ("C-o" . 'casual-info-tmenu)))
 
-** Wakib Table Of Shortcuts
+(use-package casual-dired
+:ensure t
+:bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
 
-| Shortcut     | Function                               |
-|--------------+----------------------------------------|
-| C-+          | text-scale-increase                    |
-| C--          | text-scale-decrease                    |
-| C-;          | comment-line                           |
-| C-=          | text-scale-increase                    |
-| C-a          | mark-whole-buffer                      |
-| C-b          | switch-to-buffer                       |
-| C-c          | kill-ring-save                         |
-| C-f          | isearch-forward                        |
-| C-n          | wakib-new-empty-buffer                 |
-| C-<next>     | next-buffer                            |
-| C-o          | find-file                              |
-| C-p          | print-buffer                           |
-| C-<prior>    | previous-buffer                        |
-| C-q          | save-buffers-kill-terminal             |
-| C-r          | query-replace                          |
-| <C-return>   | wakib-insert-line-after                |
-| C-s          | save-buffer                            |
-| C-S-f        | isearch-backward                       |
-| C-S-o        | revert-buffer                          |
-| C-S-r        | query-replace-regexp                   |
-| <C-S-return> | wakib-insert-line-before               |
-| C-S-s        | write-file                             |
-| C-v          | yank                                   |
-| C-w          | kill-current-buffer                    |
-| C-x          | kill-region                            |
-| C-z          | undo                                   |
-| <escape>     | keyboard-quit                          |
-| M-#          | delete-window                          |
-| M-,          | backward-sexp                          |
-| M-.          | forward-sexp                           |
-| M-:          | wakib-previous                         |
-| M-;          | wakib-next                             |
-| M-$          | split-window-below                     |
-| M-3          | delete-other-windows                   |
-| M-4          | split-window-right                     |
-| M-a          | wakib-select-line-block-all            |
-| M-d          | delete-backward-char                   |
-| M-e          | backward-kill-word                     |
-| M-E          | wakib-backward-kill-line               |
-| M-f          | delete-char                            |
-| M-<f4>       | save-buffers-kill-emacs                |
-| M-h          | other-window                           |
-| M-i          | previous-line                          |
-| M-I          | scroll-down-command                    |
-| M-j          | left-char                              |
-| M-J          | backward-paragraph                     |
-| M-k          | next-line                              |
-| M-K          | scroll-up-command                      |
-| M-l          | right-char                             |
-| M-L          | forward-paragraph                      |
-| M-M          | goto-line                              |
-| M-n          | beginning-of-buffer                    |
-| M-N          | end-of-buffer                          |
-| M-o          | forward-word                           |
-| M-O          | move-end-of-line                       |
-| M-r          | kill-word                              |
-| M-R          | kill-line                              |
-| M-s          | set-mark-command                       |
-| M-S-s        | set-rectangular-region-anchor          |
-| M-u          | backward-word                          |
-| M-U          | wakib-back-to-indentation-or-beginning |
-| M-w          | kill-whole-line                        |
-| M-X          | pp-eval-expression                     |
+(use-package casual-avy
+:ensure t
+:bind ("M-g" . casual-avy-tmenu))
+
+(use-package casual-calc
+:ensure t
+:bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
+
+(use-package casual-isearch
+:ensure t
+:bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
+
+** Contact Me
+If you have any interesting information to share please let me know. [[mailto:david.rrrrrr@yandex.com][Email Dave]]
