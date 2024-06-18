@@ -457,18 +457,6 @@
   :after evil
   :ensure t)
 
-(use-package sentence-navigation
-  :after evil
-  :ensure t
-  :config
-  (define-key evil-motion-state-map ")" 'sentence-nav-evil-forward)
-  (define-key evil-motion-state-map "(" 'sentence-nav-evil-backward)
-  (define-key evil-motion-state-map "g)" 'sentence-nav-evil-forward-end)
-  (define-key evil-motion-state-map "g(" 'sentence-nav-evil-backward-end)
-  ;; (define-key evil-outer-text-objects-map "s" 'sentence-nav-evil-a-sentence)
-  ;; (define-key evil-inner-text-objects-map "s" 'sentence-nav-evil-inner-sentence)
-  )
-
 (use-package evil-escape
   :after evil
   :config
@@ -603,3 +591,27 @@
     (replace-match "\n\n")))
 
 (repeat-mode 1)
+
+;; Define functions to enable and disable evil-mode
+(defun enable-evil-mode ()
+  "Enable evil mode and update the mode line indicator."
+  (interactive)
+  (evil-mode 1)
+  (setq mode-line-format (list (default-value 'mode-line-format) " E-ON"))
+  (force-mode-line-update))
+
+(defun disable-evil-mode ()
+  "Disable evil mode and update the mode line indicator."
+  (interactive)
+  (evil-mode -1)
+  (setq mode-line-format (list (default-value 'mode-line-format) " E-OFF"))
+  (force-mode-line-update))
+
+;; Bind F11 to enable evil-mode and F12 to disable it
+(global-set-key (kbd "<f11>") 'enable-evil-mode)
+(global-set-key (kbd "<f12>") 'disable-evil-mode)
+
+;; Set initial mode line indicator based on the state of evil-mode
+(if (bound-and-true-p evil-mode)
+    (setq mode-line-format (list (default-value 'mode-line-format) " E-ON"))
+  (setq mode-line-format (list (default-value 'mode-line-format) " E-OFF")))
