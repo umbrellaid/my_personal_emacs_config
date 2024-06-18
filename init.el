@@ -441,6 +441,34 @@
   :after treemacs evil
   :ensure t)
 
+(use-package evil-snipe
+  :after evil
+  :ensure t
+  :config
+  (evil-snipe-mode +1)
+  (evil-snipe-override-mode +1)
+  (evil-define-key '(normal motion) evil-snipe-local-mode-map
+    "s" 'evil-snipe-s
+    "S" 'evil-snipe-S)
+
+  (evil-define-key 'operator evil-snipe-local-mode-map
+    "z" 'evil-snipe-s
+    "Z" 'evil-snipe-S
+    "x" 'evil-snipe-x
+    "X" 'evil-snipe-X)
+
+  (evil-define-key 'motion evil-snipe-override-local-mode-map
+    "f" 'evil-snipe-f
+    "F" 'evil-snipe-F
+    "t" 'evil-snipe-t
+    "T" 'evil-snipe-T)
+
+  (when evil-snipe-override-evil-repeat-keys
+    (evil-define-key 'motion map
+      ";" 'evil-snipe-repeat
+      "," 'evil-snipe-repeat-reverse))
+  )
+
 (use-package evil-surround
   :after evil
   :ensure t)
@@ -535,7 +563,7 @@
 
 (use-package casual-avy
   :ensure t
-  :bind ("M-g" . casual-avy-tmenu))
+  :bind )
 
 (use-package casual-calc
   :ensure t
@@ -607,11 +635,9 @@
   (setq mode-line-format (list (default-value 'mode-line-format) " E-OFF"))
   (force-mode-line-update))
 
-;; Bind F11 to enable evil-mode and F12 to disable it
-(global-set-key (kbd "<f11>") 'enable-evil-mode)
-(global-set-key (kbd "<f12>") 'disable-evil-mode)
+(global-set-key (kbd "<insert>") 'enable-evil-mode)
+(global-set-key (kbd "<pause>") 'disable-evil-mode)
 
-;; Set initial mode line indicator based on the state of evil-mode
 (if (bound-and-true-p evil-mode)
     (setq mode-line-format (list (default-value 'mode-line-format) " E-ON"))
   (setq mode-line-format (list (default-value 'mode-line-format) " E-OFF")))
