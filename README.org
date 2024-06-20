@@ -27,7 +27,9 @@ you want a distribution.
 - [[https://github.com/susam/emfy][Emacs for You (Emfy)]]
 - [[https://github.com/james-stoup/emacs-org-mode-tutorial][Emacs-Org-Mode-Tutorial]]
 - [[https://github.com/james-stoup/org-mode-better-defaults/tree/main][Org-Mode-Better-Defaults]]
-- [[https://github.com/darkstego/wakib-emacs][Wakib: Emacs for the rest of us]] (I stopped using the wakib keybindings, but the Emacs configuration is very helpful.)
+- [[https://github.com/darkstego/wakib-emacs][Wakib: Emacs for the rest of us]] (I stopped using the wakib keybindings, but
+  the Emacs starter configuration is very helpful. I only stopped because I like
+  being able to also use neovim or plain vim in addition to Emacs.)
 - [[https://github.com/matman26/emacs-config][matman26 - emacs-config]]
 - [[https://www.youtube.com/watch?v=ZzoqH2seOGY&list=PLGP2UnPoZ7HzLGU2cyK1MXSZwXy5niFkk&index=3][matman26 - youtube playlist]]
 - [[https://www.reddit.com/r/vim/comments/1dddmx9/vim_youtubers/][reddit post vim YouTube channels]]
@@ -36,7 +38,12 @@ you want a distribution.
 - [[https://github.com/noctuid/evil-guide][noctuid emacs/evil for vim users guide]]
 
 ** Random Notes
-
+- Insert Key to turn on evil mode (default is evil mode is off, plain vanilla
+  Emacs keybindings are the starting point) - once you press this once it will say E-ON so you know it is enabled
+- Pause Key to turn off evil mode - once you press this once it will say E-OFF so you know it is disabled
+- If stuck in a menu in Emacs try the following - Ctrl + g and / or ESC ESC ESC (three
+  times in a row) - if that does not work you could be in a recursive edit so
+  then do CTRL + ] first and then try one or both of the C-g / ESC x 3
 - C-x M-$ - turn on flyspell for buffer or selection
 - in dired use capital E to launch in explorer / dolphin
 - press pause key to re-indent file using emacs smarts
@@ -52,13 +59,15 @@ you want a distribution.
 (use-package casual-dired
 :ensure t
 :bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
-casual-avy-tmenu
 (use-package casual-calc
 :ensure t
 :bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
 (use-package casual-isearch
 :ensure t
 :bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
+(use-package casual-avy
+  :ensure t
+  :bind ("<f12>" . casual-avy-tmenu))
 
 ** Contact Me
 If you have any interesting information to share please let me know. [[mailto:david.rrrrrr@yandex.com][Email Dave]]

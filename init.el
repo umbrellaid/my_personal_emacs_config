@@ -60,7 +60,7 @@
 (use-package evil
   :ensure t
   :config
-  (evil-mode 1)
+  ;; (evil-mode 1)
   )
 
 (global-hl-line-mode t) ;; This highlights the current line in the buffer
@@ -374,15 +374,8 @@
       )
   )
 
-;; (use-package treemacs
-;;   :hook (after-init . treemacs)
-;;   :bind
-;;   :config
-;;   )
-
 (use-package treemacs
   :ensure t
-  :defer t
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") 'treemacs-select-window))
@@ -408,7 +401,7 @@
           treemacs-recenter-after-file-follow nil
           treemacs-recenter-after-tag-follow  nil
           treemacs-show-cursor                nil
-          treemacs-show-hidden-files          nil
+          treemacs-show-hidden-files          t
           treemacs-silent-filewatch           nil
           treemacs-silent-refresh             nil
           treemacs-sorting                    'alphabetic-desc
@@ -430,6 +423,7 @@
        (treemacs-git-mode 'deferred))
       (`(t . _)
        (treemacs-git-mode 'simple))))
+
   :bind
   (:map global-map
         ("M-0"       . treemacs-select-window)
@@ -565,7 +559,7 @@
 
 (use-package casual-avy
   :ensure t
-  :bind )
+  :bind ("<f12>" . casual-avy-tmenu))
 
 (use-package casual-calc
   :ensure t
@@ -643,3 +637,27 @@
 (if (bound-and-true-p evil-mode)
     (setq mode-line-format (list (default-value 'mode-line-format) " E-ON"))
   (setq mode-line-format (list (default-value 'mode-line-format) " E-OFF")))
+
+(add-hook 'emacs-startup-hook 'treemacs)
+
+;; Set the default directory for Org mode files
+(setq org-directory "~/mega/org")
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+
+;; Set the default agenda files
+(setq org-agenda-files (list (expand-file-name "todo.org" org-directory)
+                             (expand-file-name "work.org" org-directory)
+                             (expand-file-name "personal.org" org-directory)))
+
+;; Optional: Configure the capture templates if you use org-capture
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline (expand-file-name "todo.org" org-directory) "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("w" "Work" entry (file+headline (expand-file-name "work.org" org-directory) "Work")
+         "* TODO %?\n  %i\n  %a")
+        ("p" "Personal" entry (file+headline (expand-file-name "personal.org" org-directory) "Personal")
+         "* TODO %?\n  %i\n  %a")))
+
+;; Load org-agenda when Emacs starts
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
