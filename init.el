@@ -161,6 +161,16 @@
   (if (equal window-system 'x)
       (progn
         ;; Your X11-specific configurations here
+	(defun drr-dired-open-mpv ()
+	  "In Dired, open the file at point with mpv."
+	  (interactive)
+	  (let ((file (dired-get-file-for-visit)))
+	    (start-process "mpv" nil "mpv" file)))
+
+	(add-hook 'dired-mode-hook
+		  (lambda ()
+		    (define-key dired-mode-map (kbd "M-RET") 'drr-dired-open-mpv)))
+
         ))
   ) ;; End of the main if
 
