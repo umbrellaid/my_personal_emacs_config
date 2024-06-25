@@ -279,26 +279,26 @@
   ;; <https://github.com/protesilaos/iosevka-comfy>.
   (setq fontaine-presets
         '((small
-           :default-family "Liberation Mono"
-           :default-height 115
+           :default-family "IosevkaTerm Nerd Font"
+           :default-height 120
            :variable-pitch-family "Liberation Sans")
           (regular) ; like this it uses all the fallback values and is named `regular'
           (medium
            :default-weight semilight
-           :default-height 150
+           :default-height 160
            :bold-weight extrabold)
           (large
            :inherit medium
-           :default-height 180)
+           :default-height 200)
           (presentation
-           :default-height 240)
+           :default-height 260)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
            ;; <https://protesilaos.com/emacs/fontaine>.
-           :default-family "Liberation Mono"
+           :default-family "IosevkaTerm Nerd Font"
            :default-weight regular
-           :default-height 150
+           :default-height 160
 
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
@@ -671,3 +671,11 @@
 ;; Load org-agenda when Emacs starts
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
+
+(defun drr-copy-all-text ()
+  "Selects all text in the buffer and copies it to the kill ring."
+  (interactive)
+  (mark-whole-buffer)
+  (kill-ring-save (point-min) (point-max)))
+
+(global-set-key (kbd "C-c v") 'drr-copy-all-text)
