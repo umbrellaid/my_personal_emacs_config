@@ -639,7 +639,7 @@
 
 (use-package casual-avy
   :ensure t
-  :bind ("<f10>" . casual-avy-tmenu))
+  :bind ("<f9>" . casual-avy-tmenu))
 
 (use-package casual-calc
   :ensure t
