@@ -2,7 +2,6 @@
   - [[#introduction][Introduction]]
   - [[#links-to-resources][Links To Resources]]
   - [[#random-notes][Random Notes]]
-  - [[#contact-me][Contact Me]]
 
 ** Introduction
 
@@ -68,6 +67,3 @@ you want a distribution.
 (use-package casual-avy
   :ensure t
   :bind ("<f12>" . casual-avy-tmenu))
-
-** Contact Me
-If you have any interesting information to share please let me know. [[mailto:david.rrrrrr@yandex.com][Email Dave]]
