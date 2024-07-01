@@ -624,6 +624,9 @@
 
   ;; don't keep message buffers around
   (setq message-kill-buffer-on-exit t)
+
+  (add-to-list 'mu4e-headers-actions
+	       '("View in browser" . mu4e-action-view-in-browser) t)
   )
 
 (use-package casual-info
@@ -708,8 +711,8 @@
   (setq mode-line-format (list (default-value 'mode-line-format) " E-OFF"))
   (force-mode-line-update))
 
-(global-set-key (kbd "<insert>") 'enable-evil-mode)
-(global-set-key (kbd "<pause>") 'disable-evil-mode)
+(global-set-key (kbd "<f12>") 'enable-evil-mode)
+(global-set-key (kbd "<f11>") 'disable-evil-mode)
 
 (if (bound-and-true-p evil-mode)
     (setq mode-line-format (list (default-value 'mode-line-format) " E-ON"))
@@ -718,7 +721,7 @@
 (add-hook 'emacs-startup-hook 'treemacs)
 
 ;; Set the default directory for Org mode files
-(setq org-directory "~/mega/org")
+(setq org-directory "~/MEGA/org")
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 
 ;; Set the default agenda files
