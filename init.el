@@ -742,12 +742,18 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 
+;; To customize settings for notmuch use the built in Emacs GUI customize-group
+;; M-x customize-group RET notmuch RET
+;; (autoload 'notmuch "notmuch" "notmuch mail" t)
+;; (require 'notmuch)
+(use-package notmuch
+  )
+
 (defun drr-copy-all-text ()
   "Selects all text in the buffer and copies it to the kill ring."
   (interactive)
   (mark-whole-buffer)
   (kill-ring-save (point-min) (point-max)))
-
 (global-set-key (kbd "C-c v") 'drr-copy-all-text)
 
 (defun drr-add-double-quotes-and-commas ()
