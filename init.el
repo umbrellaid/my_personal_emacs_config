@@ -749,6 +749,32 @@
 (use-package notmuch
   )
 
+(setq require-final-newline nil)
+(use-package yasnippet
+  :ensure t
+  :init
+  (setq yas-snippet-dirs
+	'("~/.emacs.d/snippets"  ;; personal snippets
+	  ;; "/path/to/some/collection/"  ;; foo-mode and bar-mode snippet collection
+	  ;; "/path/to/yasnippet/yasmate/snippets"  ;; the yasmate collection
+          ))
+  :config
+  (define-key yas-minor-mode-map (kbd "C-c y") 'yas-expand)
+  (yas-global-mode 1))  ;; or M-x yas-reload-all if you've started YASnippet already
+
+;; Use w3m or a browser to view html
+(setq mu4e-html2text-command 'mu4e-shr2text)
+;; or:
+;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
+;; or:
+;; (setq mu4e-html2text-command 'mu4e-shr2text)
+;; or:
+;; (setq mu4e-html2text-command "textutil -stdin -format html -convert txt -stdout")
+
+;; Choose the browser to open HTML emails
+(setq mu4e-html2text-browser 'browse-url-generic)
+(setq browse-url-generic-program "firefox")
+
 (defun drr-copy-all-text ()
   "Selects all text in the buffer and copies it to the kill ring."
   (interactive)
