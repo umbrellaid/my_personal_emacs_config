@@ -366,18 +366,7 @@
       (use-package elfeed
         :config
         (setq elfeed-feeds
-              '(("http://nullprogram.com/feed/" emacs)
-                ("https://planet.emacslife.com/atom.xml" emacs)
-                ("https://www.reddit.com/r/emacs.rss" emacs)
-                ("https://protesilaos.com/master.xml" emacs)
-                ("https://sachachua.com/blog/feed" emacs)
-                ("https://www.reddit.com/r/orgmode.rss" emacs)
-                ("https://karthinks.com/index.xml" emacs)
-                ("https://draculatheme.com/rss.xml" theme)
-                ("https://dotfyle.com/this-week-in-neovim/rss.xml" vim)
-                ("https://neovim.io/news.xml" vim)
-                ("https://www.reddit.com/r/neovim.rss" vim)
-                ("https://www.reddit.com/r/vim.rss" vim)
+              '(
                 )
               )
         )
