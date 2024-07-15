@@ -505,7 +505,7 @@
                 (if (equal window-system 'w32)
                     (async-shell-command "explorer .")
                   (if (equal window-system 'x)
-                      (async-shell-command "thunar ."))))))
+                      (async-shell-command "caja ."))))))
 
 (require 'flyspell)
 (add-hook 'text-mode-hook 'flyspell-mode)
