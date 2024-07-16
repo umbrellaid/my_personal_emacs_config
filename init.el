@@ -618,25 +618,43 @@
 	       '("View in browser" . mu4e-action-view-in-browser) t)
   )
 
+;; sync flags between mu4e and mbsync
+(setq mu4e-change-filenames-when-moving t)
+
+(require 'casual-suite)
+(use-package casual-calc
+  :ensure t
+  :bind (:map calc-mode-map ("C-o" . casual-calc-tmenu)))
+
 (use-package casual-info
   :ensure t
-  :bind (:map Info-mode-map ("C-o" . 'casual-info-tmenu)))
+  :bind (:map Info-mode-map ("C-o" . casual-info-tmenu)))
 
 (use-package casual-dired
   :ensure t
-  :bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
+  :bind (:map dired-mode-map ("C-o" . casual-dired-tmenu)))
 
 (use-package casual-avy
   :ensure t
   :bind ("<f9>" . casual-avy-tmenu))
 
-(use-package casual-calc
-  :ensure t
-  :bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
-
 (use-package casual-isearch
   :ensure t
-  :bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
+  :bind (:map isearch-mode-map ("<f2>" . casual-isearch-tmenu)))
+
+(require 'ibuffer)
+(use-package casual-ibuffer
+  :ensure t
+  :bind (:map ibuffer-mode-map
+              ("C-o" . casual-ibuffer-tmenu)
+              ("F" . casual-ibuffer-filter-tmenu)
+              ("s" . casual-ibuffer-sortby-tmenu)))
+
+(require 're-builder)
+(use-package casual-re-builder
+  :ensure t
+  :bind (:map reb-mode-map
+              ("C-o" . casual-re-builder-tmenu)))
 
 (defun drr-insert-date-stamp-prefix ()
   "Inserts the current date in mm-dd-yyyy format, prefixed with 'Date: '."
