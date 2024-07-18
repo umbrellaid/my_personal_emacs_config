@@ -621,7 +621,9 @@
 ;; sync flags between mu4e and mbsync
 (setq mu4e-change-filenames-when-moving t)
 
-(require 'casual-suite)
+
+(use-package casual-suite)
+
 (use-package casual-calc
   :ensure t
   :bind (:map calc-mode-map ("C-o" . casual-calc-tmenu)))
