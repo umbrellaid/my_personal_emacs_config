@@ -279,7 +279,7 @@
   ;; <https://github.com/protesilaos/iosevka-comfy>.
   (setq fontaine-presets
         '((small
-           :default-family "FiraCode Nerd Font"
+           :default-family "CaskaydiaCove Nerd Font"
            :default-height 120
            :variable-pitch-family "Liberation Sans")
           (regular) ; like this it uses all the fallback values and is named `regular'
@@ -296,7 +296,7 @@
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
            ;; <https://protesilaos.com/emacs/fontaine>.
-           :default-family "FiraCode Nerd Font"
+           :default-family "CaskaydiaCove Nerd Font"
            :default-weight regular
            :default-height 120
 
