@@ -10,13 +10,11 @@ below. This is just me taking other people's work and blending them together
 with small tweaks to fit my needs and preferences.
 
 To make understanding emacs easier, I am not using distributions
-anymore, but I will leave my minor notes on doom on my other GitHub
-page. The problem like many others have written about is if something
+anymore. The problem like many others have written about is if something
 goes wrong or if you want to customize something, the more complex the
 configuration you are working on the harder it is to get to the bottom
-of what is going on. Doom emacs is my favorite distribution with
-spacemacs coming in as a close second. They both are really excellent
-and they are a great tool for many people. I still recommend them if
+of what is going on. Doom Emacs and spacemacs are both really excellent
+and they are a great tools for many people. I still recommend them if
 you want a distribution.
 
 ** Links To Resources
