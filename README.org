@@ -1,4 +1,4 @@
-* My Personal Emacs Config                                              :TOC:
+* My Personal Emacs Config                                              :TOC_9:
   - [[#introduction][Introduction]]
   - [[#links-to-resources][Links To Resources]]
   - [[#random-notes][Random Notes]]
