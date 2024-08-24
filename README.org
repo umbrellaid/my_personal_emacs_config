@@ -1,24 +1,29 @@
-* My Personal Emacs Config                                              :TOC_9:
+* My Personal Emacs Config :TOC_9:
   - [[#introduction][Introduction]]
   - [[#links-to-resources][Links To Resources]]
   - [[#random-notes][Random Notes]]
 
 ** Introduction
 
-To create this customized configuration I am using existing the items noted
-below. This is just me taking other people's work and blending them together
-with small tweaks to fit my needs and preferences.
+To create my customized configuration I am using existing the items noted below.
+This is just me taking other people's work and blending them together with small
+tweaks to fit my needs and preferences.
 
-To make understanding emacs easier, I am not using distributions
-anymore. The problem like many others have written about is if something
-goes wrong or if you want to customize something, the more complex the
-configuration you are working on the harder it is to get to the bottom
-of what is going on. Doom Emacs and spacemacs are both really excellent
-and they are a great tools for many people. I still recommend them if
-you want a distribution.
+To make understanding emacs easier, I use a blend of my own customized version
+and also using distributions. The problem with only using distributions is if
+something goes wrong or if you want to customize something, it is much harder to
+get to the bottom of what is going on. Doom Emacs and spacemacs are both really
+excellent and they are a great tools for many people. I still highly recommend
+them if you want a distribution. I use them both, but I find spacemacs
+keybindings to be especially well structured. They help you discover new
+features and streamline various workflows.
 
 ** Links To Resources
-
+- [[https://github.com/SystemCrafters/crafted-emacs][Crafted Emacs - A sensible base Emacs configuration.]]
+  - This configuration is my new base for my personal configuration. This is
+    nice because it helps you learn emacs lisp and some of the emacs concepts,
+    but also gives you structured starting point and lots of options that you
+    can use or you can ignore.
 - [[https://github.com/kickingvegas/casual-suite][Casual Suite - Casual porcelains (Casual Calc/Dired/Avy/Info/Isearch)]]
 - [[https://github.com/snosov1/dot-emacs][Dot-Emacs - Snosov1]]
 - [[https://github.com/susam/emfy][Emacs for You (Emfy)]]
@@ -35,33 +40,20 @@ you want a distribution.
 - [[https://github.com/noctuid/evil-guide][noctuid emacs/evil for vim users guide]]
 
 ** Random Notes
-- Insert Key to turn on evil mode (default is evil mode is off, plain vanilla
-  Emacs keybindings are the starting point) - once you press this once it will say E-ON so you know it is enabled
-- Pause Key to turn off evil mode - once you press this once it will say E-OFF so you know it is disabled
-- If stuck in a menu in Emacs try the following - Ctrl + g and / or ESC ESC ESC (three
-  times in a row) - if that does not work you could be in a recursive edit so
-  then do CTRL + ] first and then try one or both of the C-g / ESC x 3
-- C-x M-$ - turn on flyspell for buffer or selection
-- in dired use capital E to launch in explorer / dolphin
-- press pause key to re-indent file using emacs smarts
+- F12 key to turn on evil mode (default is evil mode is on) - once you press
+  this once it will say E-ON so you know it is enabled
+- F11 key to turn off evil mode - once you press this once it will say E-OFF so
+  you know it is disabled
+- If stuck in a menu in Emacs try the following - Ctrl + g and / or ESC ESC ESC
+  (three times in a row) - if that does not work you could be in a recursive
+  edit so then do CTRL + ] first and then try one or both of the C-g / ESC x 3
+- in dired use capital E to launch in windows explorer / linux explorer named
+  caja in the window manager for the MATE desktop environment
+  https://mate-desktop.org/
 - ;; In an emacs lisp scratch buffer you can run this code to double
 - ;; check value of variable:
 - ;; (message "Current fill-column value: %d" fill-column)
 - ;; M-x display-fill-column-indicator-mode
 - ;; to show vertical line at the fill-column
-- ;; highlight text and press ALT-q to fill text to that width
-(use-package casual-info
-:ensure t
-:bind (:map Info-mode-map ("C-o" . 'casual-info-tmenu)))
-(use-package casual-dired
-:ensure t
-:bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
-(use-package casual-calc
-:ensure t
-:bind (:map calc-mode-map ("C-o" . #'casual-calc-tmenu)))
-(use-package casual-isearch
-:ensure t
-:bind (:map isearch-mode-map ("<f2>" . #'casual-isearch-tmenu)))
-(use-package casual-avy
-  :ensure t
-  :bind ("<f12>" . casual-avy-tmenu))
+- ;; highlight text and press ALT-q to fill text to that width (emacs mode)
+- ;; in evil mode press gw or gq to do the same
