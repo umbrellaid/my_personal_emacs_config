@@ -16,9 +16,15 @@ get to the bottom of what is going on. Doom Emacs and spacemacs are both really
 excellent and they are a great tools for many people. I still highly recommend
 them if you want a distribution. I use them both, but I find spacemacs
 keybindings to be especially well structured. They help you discover new
-features and streamline various workflows.
+features and streamline various workflows. I use spacemacs on one of my
+computers the setup is super well designed.
+
+I had to update my emacs because my home linux machine emacs was not working all
+the time, so I have a variation I setup in my dot files and I moved the original
+to here.
 
 ** Links To Resources
+- [[https://github.com/redguardtoo/emacs.d][redguardtoo emacs.d]]
 - [[https://github.com/SystemCrafters/crafted-emacs][Crafted Emacs - A sensible base Emacs configuration.]]
   - This configuration is my new base for my personal configuration. This is
     nice because it helps you learn emacs lisp and some of the emacs concepts,
@@ -47,9 +53,7 @@ features and streamline various workflows.
 - If stuck in a menu in Emacs try the following - Ctrl + g and / or ESC ESC ESC
   (three times in a row) - if that does not work you could be in a recursive
   edit so then do CTRL + ] first and then try one or both of the C-g / ESC x 3
-- in dired use capital E to launch in windows explorer / linux explorer named
-  caja in the window manager for the MATE desktop environment
-  https://mate-desktop.org/
+- in dired use capital E to launch in windows explorer / linux explorer
 - ;; In an emacs lisp scratch buffer you can run this code to double
 - ;; check value of variable:
 - ;; (message "Current fill-column value: %d" fill-column)
