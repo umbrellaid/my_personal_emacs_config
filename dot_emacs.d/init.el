@@ -1,4 +1,3 @@
-(setq debug-on-error t)
 (setq my-environment "HOME")
 (if (string-equal my-environment "WORK")
     (progn
@@ -399,7 +398,6 @@
 (easy-menu-add-item global-map '(menu-bar)
                     casual-bookmarks-main-menu
                     "Tools")
-(require 'hl-line)
 (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode)
 (keymap-global-set "M-g" #'casual-avy-tmenu)
 (add-hook 'markdown-mode-hook #'imenu-add-menubar-index)
