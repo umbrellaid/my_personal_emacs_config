@@ -15,11 +15,6 @@
         (setenv "LANG" "en_US")
         (setq ispell-dictionary "en_US")
         )
-      (setq denote-directory (expand-file-name "~/org-notes/"))
-      (setq denote-known-keywords '("passwords" "code" "snippets" "links" "software" "settings"))
-      (setq denote-dired-directories
-            (list denote-directory
-                  (expand-file-name "~/org-notes/")))
       )
   (progn
     (message "Else part of WORK code running...")
