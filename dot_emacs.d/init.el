@@ -59,7 +59,6 @@
 (add-to-list 'package-selected-packages 'casual-ibuffer)
 (add-to-list 'package-selected-packages 'casual-info)
 (add-to-list 'package-selected-packages 'casual-re-builder)
-(add-to-list 'package-selected-packages 'denote)
 (add-to-list 'package-selected-packages 'evil-escape)
 (add-to-list 'package-selected-packages 'evil-numbers)
 (add-to-list 'package-selected-packages 'evil-surround)
@@ -138,11 +137,6 @@
 (if (string-equal my-environment "HOME")
     (progn
       (message "if part of HOME code running...")
-      (setq denote-directory (expand-file-name "~/org-notes/"))
-      (setq denote-known-keywords '("passwords" "code" "snippets" "links" "software" "settings"))
-      (setq denote-dired-directories
-            (list denote-directory
-                  (expand-file-name "~/org-notes/")))
       )
   (progn
     (message "Else part of HOME code running...")
@@ -159,51 +153,6 @@
 (blink-cursor-mode 0)
 (set-default-coding-systems 'utf-8)
 (spacious-padding-mode 1)
-(setq denote-backlinks-show-context nil)
-(setq denote-date-format nil)
-(setq denote-date-prompt-use-org-read-date t)
-(setq denote-excluded-directories-regexp nil)
-(setq denote-excluded-keywords-regexp nil)
-(setq denote-file-type nil)
-(setq denote-infer-keywords t)
-(setq denote-prompts '(title keywords))
-(setq denote-rename-confirmations '(rewrite-front-matter modify-file-name))
-(setq denote-save-buffers nil)
-(setq denote-sort-keywords t)
-(add-hook 'text-mode-hook #'denote-fontify-links-mode-maybe)
-(add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
-(denote-rename-buffer-mode 1)
-(let ((map global-map))
-  (define-key map (kbd "C-c n n") #'denote)
-  (define-key map (kbd "C-c n c") #'denote-region) ; "contents" mnemonic
-  (define-key map (kbd "C-c n N") #'denote-type)
-  (define-key map (kbd "C-c n d") #'denote-date)
-  (define-key map (kbd "C-c n z") #'denote-signature) ; "zettelkasten" mnemonic
-  (define-key map (kbd "C-c n s") #'denote-subdirectory)
-  (define-key map (kbd "C-c n t") #'denote-template)
-  (define-key map (kbd "C-c n i") #'denote-link) ; "insert" mnemonic
-  (define-key map (kbd "C-c n I") #'denote-add-links)
-  (define-key map (kbd "C-c n b") #'denote-backlinks)
-  (define-key map (kbd "C-c n f f") #'denote-find-link)
-  (define-key map (kbd "C-c n f b") #'denote-find-backlink)
-  (define-key map (kbd "C-c n r") #'denote-rename-file)
-  (define-key map (kbd "C-c n R") #'denote-rename-file-using-front-matter))
-(let ((map dired-mode-map))
-  (define-key map (kbd "C-c C-d C-i") #'denote-link-dired-marked-notes)
-  (define-key map (kbd "C-c C-d C-r") #'denote-dired-rename-files)
-  (define-key map (kbd "C-c C-d C-k") #'denote-dired-rename-marked-files-with-keywords)
-  (define-key map (kbd "C-c C-d C-R") #'denote-dired-rename-marked-files-using-front-matter))
-(with-eval-after-load 'org-capture
-  (setq denote-org-capture-specifiers "%l\n%i\n%?")
-  (add-to-list 'org-capture-templates
-               '("n" "New note (with denote.el)" plain
-                 (file denote-last-path)
-                 #'denote-org-capture
-                 :no-save t
-                 :immediate-finish nil
-                 :kill-buffer t
-                 :jump-to-captured t)))
-(add-hook 'context-menu-functions #'denote-context-menu)
 (defvar ce-example-use-evil-escape t
   "Load `evil-escape' package with example.
 `evil-escape': Bind Escape to an alternative key combination (e.g. `jj').")
@@ -311,7 +260,6 @@
     (insert "\',")
     (forward-line 1)))
 (mapc #'disable-theme custom-enabled-themes)
-;; (load-theme 'modus-operandi-tinted :noconfirm)
 (load-theme 'modus-vivendi-tinted :noconfirm)
 (add-hook 'org-mode-hook 'toc-org-mode)
 (if (string-equal my-environment "HOME")
@@ -366,7 +314,6 @@
   "Customize context MENU with CLICK event."
   (easy-menu-add-item menu nil casual-dired-sort-menu)
   menu)
-
 (add-hook 'context-menu-functions #'casual-dired-context-menu-addons)
 (add-hook 'dired-mode-hook 'context-menu-mode)
 (keymap-set Info-mode-map "C-o" #'casual-info-tmenu)
@@ -404,10 +351,8 @@
 (add-hook 'makefile-mode-hook #'imenu-add-menubar-index)
 (add-hook 'prog-mode-hook #'imenu-add-menubar-index)
 (add-hook 'org-mode-hook #'imenu-add-menubar-index)
-
 (setq fontaine-latest-state-file
       (locate-user-emacs-file "fontaine-latest-state.eld"))
-
 ;; Iosevka Comfy is my highly customised build of Iosevka with
 ;; monospaced and duospaced (quasi-proportional) variants as well as
 ;; support or no support for ligatures:
